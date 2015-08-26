@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using FancyChat.Data;
 using FancyChat.Services.Models;
 using Microsoft.AspNet.SignalR;
 
@@ -9,10 +10,13 @@ namespace FancyChat.Services.Hubs
 {
     public class ChatHub : Hub
     {
+        private FancyChatContext db = FancyChatContext.Create();
+
         static List<UserModel> users = new List<UserModel>();
         static List<MessageModel> messages = new List<MessageModel>();
         public void Connect(string userName)
         {
+            
             var id = Context.ConnectionId;
 
 
@@ -31,7 +35,7 @@ namespace FancyChat.Services.Hubs
 
         public void SendMessageToAll(string userName, string message)
         {
-            AddMessageinCache(userName, message); //dobavi
+            AddMessageinCache(userName, message); 
 
             // Broad cast message
             Clients.All.messageReceived(userName, message);

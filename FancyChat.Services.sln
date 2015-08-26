@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyChat.Services", "FancyChat.Services\FancyChat.Services.csproj", "{FC34EEE1-A02F-44BD-AD09-56D32E6E4726}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyChat.Models", "FancyChat.Models\FancyChat.Models.csproj", "{9BF2DD62-9719-4D58-9640-E10FF2682316}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyChat.Data", "FancyChat.Data\FancyChat.Data.csproj", "{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{FC34EEE1-A02F-44BD-AD09-56D32E6E4726}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC34EEE1-A02F-44BD-AD09-56D32E6E4726}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC34EEE1-A02F-44BD-AD09-56D32E6E4726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BF2DD62-9719-4D58-9640-E10FF2682316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BF2DD62-9719-4D58-9640-E10FF2682316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BF2DD62-9719-4D58-9640-E10FF2682316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BF2DD62-9719-4D58-9640-E10FF2682316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
