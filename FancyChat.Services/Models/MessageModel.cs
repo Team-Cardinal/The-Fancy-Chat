@@ -8,9 +8,10 @@ namespace FancyChat.Services.Models
     public class MessageModel
     {
 
-        public string UserName { get; set; }
+        public string SenderUserName { get; set; }
 
-        public string Message { get; set; }
+        public string Text { get; set; }
+        public DateTime DateSent { get; set; }
 
 
     }
