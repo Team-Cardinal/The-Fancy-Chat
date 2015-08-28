@@ -10,7 +10,7 @@ namespace FancyChat.Services.Models
 
         public string SenderUserName { get; set; }
 
-        public string Text { get; set; }
+        public string Message { get; set; }
         public DateTime DateSent { get; set; }
 
 

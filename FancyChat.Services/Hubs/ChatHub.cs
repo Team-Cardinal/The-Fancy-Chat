@@ -28,7 +28,7 @@ namespace FancyChat.Services.Hubs
                 Clients.Caller.onConnected(id, userName, users, messages);
 
                 // send to all except caller client
-                Clients.AllExcept(id).onNewUserConnected(id, userName);
+                Clients.Others.onNewUserConnected(id, userName);
 
             }
         }
@@ -75,7 +75,7 @@ namespace FancyChat.Services.Hubs
 
         private void AddMessageinCache(string userName, string message)
         {
-            messages.Add(new MessageModel() { UserName = userName, Message = message });
+            messages.Add(new MessageModel() { SenderUserName = userName, Message = message });
 
             if (messages.Count > 100)
                 messages.RemoveAt(0);

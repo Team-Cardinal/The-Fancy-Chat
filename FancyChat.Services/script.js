@@ -35,10 +35,27 @@ function registerEvents(chatHub) {
 
     $("#btnStartChat").click(function () {
 
-        var name = $("#txtNickName").val();
-        if (name.length > 0) {
-            chatHub.server.connect(name);
-        }
+        var name = $("#txtUserName").val();
+        var password = $("#txtPassword").val();
+        if (name.length > 0 && password.length > 0) {
+            $.ajax({
+                url: "http://localhost:24252/token",
+                method: "POST",
+                data: {
+                    "userName": name,
+                    "password": password,
+                    "grant_type": "password"
+                }
+            }).done(function (data) {
+                sessionStorage.setItem("username", name);
+                sessionStorage.setItem("authorizationToken", data.access_token);
+                console.log(data);
+                chatHub.server.connect(name);
+
+            }).fail(function(data) {
+                console.log("Invalid username or password");
+            });
+        }     
         else {
             alert("Please enter name");
         }
@@ -51,7 +68,7 @@ function registerEvents(chatHub) {
         var msg = $("#txtMessage").val();
         if (msg.length > 0) {
 
-            var userName = $('#hdUserName').val();
+            var userName = sessionStorage.getItem("username");
             chatHub.server.sendMessageToAll(userName, msg);
             $("#txtMessage").val('');
         }
@@ -255,11 +272,4 @@ function AddDivToContainer($div) {
 
         }
     });
-
-    ////$div.resizable({
-    ////    stop: function () {
-
-    ////    }
-    ////});
-
 }
