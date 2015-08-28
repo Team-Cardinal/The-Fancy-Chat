@@ -123,10 +123,20 @@ function registerClientMethods(chatHub) {
         }
 
         // Add Existing Messages
-        for (i = 0; i < messages.length; i++) {
+        $.ajax({
+            url: "http://localhost:24252/api/messages",
+            method: "GET",
+            
+        }).done(function (data) {
+            console.log(data);
+            for (i = 0; i < data.length; i++) {
 
-            AddMessage(messages[i].UserName, messages[i].Message);
-        }
+                AddMessage(data[i].SenderUserName, data[i].Message);
+            }
+
+        }).fail(function (data) {
+            console.log("Could not load messages");
+        });
 
 
     }
