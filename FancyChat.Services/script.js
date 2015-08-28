@@ -127,7 +127,8 @@ function registerClientMethods(chatHub) {
     chatHub.client.onUserDisconnected = function (id, userName) {
 
         $('#' + id).remove();
-
+        console.log(id);
+        console.log(userName);
         var ctrId = 'private_' + id;
         $('#' + ctrId).remove();
 

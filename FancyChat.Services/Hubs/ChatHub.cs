@@ -58,20 +58,20 @@ namespace FancyChat.Services.Hubs
             }
         }
 
-        //public override System.Threading.Tasks.Task OnDisconnected()
-        //{
-        //    var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
-        //    if (item != null)
-        //    {
-        //        users.Remove(item);
+        public System.Threading.Tasks.Task OnDisconnected()
+        {
+            var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+            if (item != null)
+            {
+                users.Remove(item);
 
-        //        var id = Context.ConnectionId;
-        //        Clients.All.onUserDisconnected(id, item.UserName);
+                var id = Context.ConnectionId;
+                Clients.All.onUserDisconnected(id, item.UserName);
 
-        //    }
+            }
 
-        //    return base.OnDisconnected();
-        //}
+            return base.OnDisconnected(true);
+        }
 
         private void AddMessageinCache(string userName, string message)
         {
