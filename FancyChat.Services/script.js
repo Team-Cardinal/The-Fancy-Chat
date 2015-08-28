@@ -1,6 +1,11 @@
 ﻿$(function () {
+    var isLogged = false;
 
-    setScreen(false);
+    //if (sessionStorage.getItem("username")) {
+    //    isLogged = true;
+    //}
+
+    setScreen(isLogged);
 
     // Declare a proxy to reference the hub. 
     var chatHub = $.connection.chatHub;
@@ -16,9 +21,9 @@
 
 });
 
-function setScreen(isLogin) {
+function setScreen(isLogged) {
 
-    if (!isLogin) {
+    if (!isLogged) {
 
         $("#divChat").hide();
         $("#divLogin").show();
