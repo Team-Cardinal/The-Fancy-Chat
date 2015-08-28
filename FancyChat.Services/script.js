@@ -69,8 +69,23 @@ function registerEvents(chatHub) {
         if (msg.length > 0) {
 
             var userName = sessionStorage.getItem("username");
-            chatHub.server.sendMessageToAll(userName, msg);
-            $("#txtMessage").val('');
+            $.ajax({
+                url: "http://localhost:24252/api/messages",
+                method: "POST",
+                data: {
+                    "Message": msg,
+                    "SenderUserName": userName,
+                    "DateSent": new Date().toLocaleString()
+        }
+            }).done(function (data) {
+                chatHub.server.sendMessageToAll(userName, msg);
+                $("#txtMessage").val('');
+                console.log(data);
+
+            }).fail(function (data) {
+                console.log("Cannot send message.");
+            });
+            
         }
     });
 

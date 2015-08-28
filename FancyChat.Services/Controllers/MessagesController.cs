@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using FancyChat.Data;
+using FancyChat.Models;
 using FancyChat.Services.Models;
 
 namespace FancyChat.Services.Controllers
@@ -30,6 +31,21 @@ namespace FancyChat.Services.Controllers
 
             return Ok(messages);
 
+        }
+
+        public IHttpActionResult PostMessage(MessageModel message)
+        {
+            var sender = db.Users.FirstOrDefault(u => u.UserName == message.SenderUserName);
+            var newMessage = new Message()
+            {
+                Text = message.Message,
+                DateTime = message.DateSent,
+                UserId = sender.Id
+            };
+
+            db.Messages.Add(newMessage);
+            db.SaveChanges();
+            return Ok(message);
         }
     }
 }
