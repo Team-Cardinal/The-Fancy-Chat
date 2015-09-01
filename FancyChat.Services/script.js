@@ -276,7 +276,7 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
         $textBox = $div.find("#txtPrivateMessage");
         var msg = $textBox.val();
         if (msg.length > 0) {
-
+            $.ajax()
             chatHub.server.sendPrivateMessage(userId, msg);
             $textBox.val('');
         }

@@ -17,6 +17,7 @@ namespace FancyChat.Data
             return new FancyChatContext();
         }
 
-        public IDbSet<Message> Messages { get; set; }
+        public IDbSet<PublicMessage> PublicMessages { get; set; }
+        public IDbSet<PrivateMessage> PrivateMessages { get; set; }
     }
 }

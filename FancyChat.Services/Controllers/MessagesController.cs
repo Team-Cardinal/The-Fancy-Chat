@@ -16,7 +16,7 @@ namespace FancyChat.Services.Controllers
 
         public IHttpActionResult GetMessages()
         {
-            var messages = db.Messages.Select(m => new MessageModel()
+            var messages = db.PublicMessages.Select(m => new MessageModel()
             {
                 SenderUserName = m.User.UserName,
                 Message = m.Text,
@@ -36,14 +36,14 @@ namespace FancyChat.Services.Controllers
         public IHttpActionResult PostMessage(MessageModel message)
         {
             var sender = db.Users.FirstOrDefault(u => u.UserName == message.SenderUserName);
-            var newMessage = new Message()
+            var newMessage = new PublicMessage()
             {
                 Text = message.Message,
                 DateTime = message.DateSent,
-                UserId = sender.Id
+                SenderId = sender.Id
             };
 
-            db.Messages.Add(newMessage);
+            db.PublicMessages.Add(newMessage);
             db.SaveChanges();
             return Ok(message);
         }
