@@ -36,12 +36,19 @@ function setScreen(isLogged) {
 
 }
 
+function escapeHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function registerEvents(chatHub) {
 
     $("#btnStartChat").click(function () {
 
         var name = $("#txtUserName").val();
+        
         var password = $("#txtPassword").val();
+        
+
         if (name.length > 0 && password.length > 0) {
             $.ajax({
                 url: "http://localhost:24252/token",
@@ -71,6 +78,7 @@ function registerEvents(chatHub) {
     $('#btnSendMsg').click(function () {
 
         var msg = $("#txtMessage").val();
+       
         if (msg.length > 0) {
 
             var userName = sessionStorage.getItem("username");
@@ -78,7 +86,7 @@ function registerEvents(chatHub) {
                 url: "http://localhost:24252/api/messages",
                 method: "POST",
                 data: {
-                    "Message": msg,
+                    "Message": escapeHtml(msg),
                     "SenderUserName": userName,
                     "DateSent": new Date().toLocaleString()
         }
@@ -275,8 +283,11 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
 
         $textBox = $div.find("#txtPrivateMessage");
         var msg = $textBox.val();
+        
+        console.log(msg);
+        
         if (msg.length > 0) {
-            $.ajax()
+            
             chatHub.server.sendPrivateMessage(userId, msg);
             $textBox.val('');
         }
