@@ -13,7 +13,8 @@ namespace FancyChat.Services.Hubs
         private FancyChatContext db = FancyChatContext.Create();
 
         static List<UserModel> users = new List<UserModel>();
-        static List<MessageModel> messages = new List<MessageModel>();
+        //todo: add online users
+        
         public void Connect(string userName)
         {
             
@@ -25,7 +26,7 @@ namespace FancyChat.Services.Hubs
                 users.Add(new UserModel() { ConnectionId = id, UserName = userName });
 
                 // send to caller
-                Clients.Caller.onConnected(id, userName, users, messages);
+                Clients.Caller.onConnected(id, userName, users);
 
                 // send to all except caller client
                 Clients.Others.onNewUserConnected(id, userName);
@@ -35,7 +36,7 @@ namespace FancyChat.Services.Hubs
 
         public void SendMessageToAll(string userName, string message)
         {
-            AddMessageinCache(userName, message); 
+            
 
             // Broad cast message
             Clients.All.messageReceived(userName, message);
@@ -73,12 +74,6 @@ namespace FancyChat.Services.Hubs
             return base.OnDisconnected(true);
         }
 
-        private void AddMessageinCache(string userName, string message)
-        {
-            messages.Add(new MessageModel() { SenderUserName = userName, Message = message });
-
-            if (messages.Count > 100)
-                messages.RemoveAt(0);
-        }
+        
     }
 }

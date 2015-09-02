@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyChat.Models", "FancyCh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyChat.Data", "FancyChat.Data\FancyChat.Data.csproj", "{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}"
 EndProject
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "FancyChat.Services.Azure", "FancyChat.Services.Azure\FancyChat.Services.Azure.ccproj", "{F08A5993-14FC-4ED3-8F86-E038763DB7D9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F7FDFA0-5E7B-415F-9B08-47E15C8E9359}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F08A5993-14FC-4ED3-8F86-E038763DB7D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F08A5993-14FC-4ED3-8F86-E038763DB7D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F08A5993-14FC-4ED3-8F86-E038763DB7D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F08A5993-14FC-4ED3-8F86-E038763DB7D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

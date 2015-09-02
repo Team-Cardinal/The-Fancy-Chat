@@ -44,45 +44,7 @@ function escapeHtml(str) {
 
 function registerEvents(chatHub) {
 
-    $("#btnStartChat").click(function () {
-
-        var name = $("#txtUserName").val();
-        
-        var password = $("#txtPassword").val();
-        
-
-        if (name.length > 0 && password.length > 0) {
-            $.ajax({
-                url: "http://localhost:24252/token",
-                method: "POST",
-                data: {
-                    "userName": name,
-                    "password": password,
-                    "grant_type": "password"
-                }
-            }).done(function (data) {
-                sessionStorage.setItem("username", name);
-                sessionStorage.setItem("authorizationToken", data.access_token);
-                console.log(data);
-                chatHub.server.connect(name);
-
-            }).fail(function (data) {
-                console.log("Invalid username or password");
-            });
-        }
-        else {
-            console.log(name.length);
-            console.log(password.length);
-            if (name.length < 1) {
-                alert("Please enter name!");
-            }
-            else if (password.length < 1) {
-                alert("Please enter password!");
-            }
-        }
-
-    });
-
+    
     //click on login button
     $("#btnLogin").click(function () {
 
@@ -108,8 +70,7 @@ function registerEvents(chatHub) {
             });
         }
         else {
-            console.log(name.length);
-            console.log(password.length);
+            
             if (name.length < 1) {
                 alert("Please enter name!");
             }
@@ -194,6 +155,7 @@ function registerClientMethods(chatHub) {
     // Calls when user successfully logged in
     chatHub.client.onConnected = function (id, userName, allUsers, messages) {
 
+        var currentUser = sessionStorage.getItem("username");
         setScreen(true);
 
         $('#hdId').val(id);
@@ -281,18 +243,18 @@ function AddUser(chatHub, id, name) {
 
     var userId = $('#hdId').val();
 
-    var code = "";
+    var html = "";
 
     if (userId == id) {
 
-        code = $('<div class="loginUser">' + name + "</div>");
+        html = $('<div class="currentUser">' + name + "1" + "</div>");
 
     }
     else {
 
-        code = $('<a id="' + id + '" class="user" >' + name + '<a>');
+        html = $('<a id="' + id + '" class="user" >' + name +"2" + '<a>');
 
-        $(code).dblclick(function () {
+        $(html).dblclick(function () {
 
             var id = $(this).attr('id');
 
@@ -302,12 +264,12 @@ function AddUser(chatHub, id, name) {
         });
     }
 
-    $("#divusers").append(code);
+    $("#divusers").append(html);
 
 }
 
 function AddMessage(userName, message) {
-    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + message + '</div>');
+    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
 
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
