@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using FancyChat.Data;
 using FancyChat.Services.Models;
@@ -59,17 +60,21 @@ namespace FancyChat.Services.Hubs
             }
         }
 
-        public System.Threading.Tasks.Task OnDisconnected()
+        public override Task OnDisconnected(bool stopCalled)
         {
-            var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
-            if (item != null)
+            if (stopCalled)
             {
-                users.Remove(item);
+                var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                if (item != null)
+                {
+                    users.Remove(item);
 
-                var id = Context.ConnectionId;
-                Clients.All.onUserDisconnected(id, item.UserName);
+                    var id = Context.ConnectionId;
+                    Clients.All.onUserDisconnected(id, item.UserName);
 
+                }
             }
+            
 
             return base.OnDisconnected(true);
         }

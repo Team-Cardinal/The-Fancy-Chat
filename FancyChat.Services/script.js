@@ -242,8 +242,7 @@ function registerClientMethods(chatHub) {
     chatHub.client.onUserDisconnected = function (id, userName) {
 
         $('#' + id).remove();
-        console.log(id);
-        console.log(userName);
+        
         var ctrId = 'private_' + id;
         $('#' + ctrId).remove();
 
@@ -318,6 +317,7 @@ function AddMessage(userName, message) {
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
 }
+
 
 function OpenPrivateChatWindow(chatHub, id, userName) {
 
