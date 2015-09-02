@@ -1,14 +1,15 @@
 ﻿$(function () {
     var isLogged = false;
-
-    //if (sessionStorage.getItem("username")) {
-    //    isLogged = true;
-    //}
+   
+    
 
     setScreen(isLogged);
 
     // Declare a proxy to reference the hub. 
     var chatHub = $.connection.chatHub;
+
+    
+
 
     registerClientMethods(chatHub);
 
@@ -27,12 +28,14 @@ function setScreen(isLogged) {
 
         $("#divChat").hide();
         $("#divLogin").show();
+        $("#divRegister").show();
         $("#divHome").hide();
     }
     else {
 
         $("#divChat").show();
         $("#divLogin").hide();
+        $("#divRegister").hide();
         $("#divHome").show();
     }
 
@@ -44,7 +47,48 @@ function escapeHtml(str) {
 
 function registerEvents(chatHub) {
 
-    
+    $("#btnRegister").click(function () {
+
+        var email = $("#registerEmail").val();
+        var name = $("#registerUsername").val();
+        var password = $("#registerPassword").val();
+        var confirmPassword = $("#confirmRegisterPassword").val();
+        if (password != confirmPassword) {
+            console.log("Passwords do not match.");
+        } else {
+            if (name.length > 0 && password.length > 0) {
+                $.ajax({
+                    url: "http://localhost:24252/api/account/register",
+                    method: "POST",
+                    data: {
+                        "email": email,
+                        "userName": name,
+                        "password": password,
+                        "confirmPassword": confirmPassword
+                    }
+                }).done(function (data) {
+                    sessionStorage.setItem("username", name);
+                    sessionStorage.setItem("authorizationToken", data.access_token);
+                    console.log(data);
+                    chatHub.server.connect(name);
+
+                }).fail(function (data) {
+                    console.log("Invalid username or password");
+                });
+            }
+            else {
+
+                if (name.length < 1) {
+                    alert("Please enter name!");
+                }
+                else if (password.length < 1) {
+                    alert("Please enter password!");
+                }
+            }
+        }
+        
+    });
+
     //click on login button
     $("#btnLogin").click(function () {
 
