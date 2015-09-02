@@ -9,7 +9,7 @@
 
     // Declare a proxy to reference the hub. 
     var chatHub = $.connection.chatHub;
-   
+
     registerClientMethods(chatHub);
 
     // Start Hub
@@ -27,11 +27,13 @@ function setScreen(isLogged) {
 
         $("#divChat").hide();
         $("#divLogin").show();
+        $("#divHome").hide();
     }
     else {
 
         $("#divChat").show();
         $("#divLogin").hide();
+        $("#divHome").show();
     }
 
 }
@@ -57,14 +59,83 @@ function registerEvents(chatHub) {
                 console.log(data);
                 chatHub.server.connect(name);
 
-            }).fail(function(data) {
+            }).fail(function (data) {
                 console.log("Invalid username or password");
             });
-        }     
+        }
         else {
-            alert("Please enter name");
+            console.log(name.length);
+            console.log(password.length);
+            if (name.length < 1) {
+                alert("Please enter name!");
+            }
+            else if (password.length < 1) {
+                alert("Please enter password!");
+            }
         }
 
+    });
+
+    //click on login button
+    $("#btnLogin").click(function () {
+
+        var name = $("#txtUserName").val();
+        var password = $("#txtPassword").val();
+        if (name.length > 0 && password.length > 0) {
+            $.ajax({
+                url: "http://localhost:24252/token",
+                method: "POST",
+                data: {
+                    "userName": name,
+                    "password": password,
+                    "grant_type": "password"
+                }
+            }).done(function (data) {
+                sessionStorage.setItem("username", name);
+                sessionStorage.setItem("authorizationToken", data.access_token);
+                console.log(data);
+                chatHub.server.connect(name);
+
+            }).fail(function (data) {
+                console.log("Invalid username or password");
+            });
+        }
+        else {
+            console.log(name.length);
+            console.log(password.length);
+            if (name.length < 1) {
+                alert("Please enter name!");
+            }
+            else if (password.length < 1) {
+                alert("Please enter password!");
+            }
+        }
+    });
+
+    //click on Start New Chat button
+    $("#btnCreateChat").click(function () {
+
+        var chatPartner = $("#chatPartner").val();
+        console.log(chatPartner);
+        if (chatPartner) {
+
+            var currentUser = sessionStorage.getItem("username");
+            console.log(currentUser);
+
+            $.ajax({
+                url: "http://localhost:24252/api/chats",
+                method: "POST",
+                data: {
+                    "Name": currentUser + " " + chatPartner,
+                    "CurrentUser": currentUser,
+                    "ChatPartner": chatPartner
+                }
+            }).done(function (data) {
+                alert("Chat has been successfully created.");
+            }).fail(function (data) {
+                console.log("Some error message.")
+            });
+        }
     });
 
 
@@ -81,7 +152,7 @@ function registerEvents(chatHub) {
                     "Message": msg,
                     "SenderUserName": userName,
                     "DateSent": new Date().toLocaleString()
-        }
+                }
             }).done(function (data) {
                 chatHub.server.sendMessageToAll(userName, msg);
                 $("#txtMessage").val('');
@@ -90,7 +161,7 @@ function registerEvents(chatHub) {
             }).fail(function (data) {
                 console.log("Cannot send message.");
             });
-            
+
         }
     });
 
@@ -131,7 +202,7 @@ function registerClientMethods(chatHub) {
         $.ajax({
             url: "http://localhost:24252/api/messages",
             method: "GET",
-            
+
         }).done(function (data) {
             console.log(data);
             for (i = 0; i < data.length; i++) {

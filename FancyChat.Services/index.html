@@ -43,14 +43,30 @@
         <div id="divLogin" class="login">
             <div>
                 Username:<br />
-                <input id="txtUserName" type="text" class="textBox"/>
-                Password:<br/>
+                <input id="txtUserName" type="text" class="textBox" />
+                Password:<br />
                 <input id="txtPassword" type="password" class="textBox" />
             </div>
             <div id="divButton">
                 <input id="btnStartChat" type="button" class="submitButton" value="Start Chat" />
+                <input id="btnLogin" type="button" class="submitButton" value="Login" />
+                <input id="btnRegister" type="button" class="submitButton" value="Register" />
             </div>
         </div>
+
+        <!-- home page -->
+        <div id="divHome" class="chatHome">
+            <div class="title">
+                Welcome to your homepage! <span id='spanUser'></span>
+                <input class="textbox" type="text" id="chatPartner" />
+                <input id="btnCreateChat" type="button" class="submitButton" value="Start New Chat" />
+            </div>
+            <div class="content">
+                <div id="divActiveChats" class="chatWindow">
+                </div>
+            </div>
+        </div>
+        <!-- End of home page -->
 
         <div id="divChat" class="chatRoom">
             <div class="title">

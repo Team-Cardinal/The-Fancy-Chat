@@ -35,6 +35,9 @@ namespace FancyChat.Services.Models
     public class RegisterBindingModel
     {
         [Required]
+        public string UserName { get; set; }
+
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

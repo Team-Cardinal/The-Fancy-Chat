@@ -18,6 +18,9 @@ namespace FancyChat.Models
             // Add custom user claims here
             return userIdentity;
         }
+
         public virtual ICollection<PublicMessage> Messages { get; set; }
+
+        public virtual ICollection<Chat> Chats { get; set; }
     }      
 }
