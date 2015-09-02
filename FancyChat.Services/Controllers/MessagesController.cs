@@ -18,7 +18,7 @@ namespace FancyChat.Services.Controllers
         {
             var messages = db.PublicMessages.Select(m => new MessageModel()
             {
-                SenderUserName = m.User.UserName,
+                SenderUserName = m.Sender.UserName,
                 Message = m.Text,
                 DateSent = m.DateTime
                 

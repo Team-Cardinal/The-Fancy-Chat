@@ -11,6 +11,11 @@ namespace FancyChat.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            this.PublicMessages = new HashSet<PublicMessage>();
+            this.PrivateMessages = new HashSet<PrivateMessage>();
+        }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -18,6 +23,7 @@ namespace FancyChat.Models
             // Add custom user claims here
             return userIdentity;
         }
-        public virtual ICollection<PublicMessage> Messages { get; set; }
+        public virtual ICollection<PublicMessage> PublicMessages { get; set; }
+        public virtual ICollection<PrivateMessage> PrivateMessages { get; set; }
     }      
 }
