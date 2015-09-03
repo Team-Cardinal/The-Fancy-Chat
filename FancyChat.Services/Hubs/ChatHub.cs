@@ -71,9 +71,20 @@ namespace FancyChat.Services.Hubs
 
                     var id = Context.ConnectionId;
                     Clients.All.onUserDisconnected(id, item.UserName);
-
                 }
             }
+            else
+            {
+                var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                if (item != null)
+                {
+                    users.Remove(item);
+
+                    var id = Context.ConnectionId;
+                    Clients.All.onUserDisconnected(id, item.UserName);
+                }
+            }
+           
             
 
             return base.OnDisconnected(true);

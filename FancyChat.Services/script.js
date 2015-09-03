@@ -253,6 +253,8 @@ function registerClientMethods(chatHub) {
         $('#divusers').prepend(disc);
         $(disc).fadeIn(200).delay(2000).fadeOut(200);
 
+        connection.hub.stop();
+
     }
 
     chatHub.client.messageReceived = function (userName, message) {
