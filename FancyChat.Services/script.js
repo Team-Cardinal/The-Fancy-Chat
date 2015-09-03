@@ -106,8 +106,10 @@ function registerEvents(chatHub) {
             }).done(function (data) {
                 sessionStorage.setItem("username", name);
                 sessionStorage.setItem("authorizationToken", data.access_token);
-                console.log(data);
                 chatHub.server.connect(name);
+                console.log(data);
+
+                
 
             }).fail(function (data) {
                 console.log("Invalid username or password");
@@ -195,13 +197,19 @@ function registerEvents(chatHub) {
 }
 
 function registerClientMethods(chatHub) {
+    
 
     // Calls when user successfully logged in
-    chatHub.client.onConnected = function (id, userName, allUsers, messages) {
+    chatHub.client.onConnected = function (id, userName, allUsers) {
+        console.log("SAdsdsadsadassa");
+        console.log(id);
+        console.log(userName);
+        console.log(allUsers);
 
-        var currentUser = sessionStorage.getItem("username");
+
+        var currentUser = sessionStorage.getItem("userName");
         setScreen(true);
-
+        
         $('#hdId').val(id);
         $('#hdUserName').val(userName);
         $('#spanUser').html(userName);
@@ -253,7 +261,7 @@ function registerClientMethods(chatHub) {
         $('#divusers').prepend(disc);
         $(disc).fadeIn(200).delay(2000).fadeOut(200);
 
-        connection.hub.stop();
+       
 
     }
 

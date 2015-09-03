@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using FancyChat.Data;
+using FancyChat.Models;
 using FancyChat.Services.Models;
 using Microsoft.AspNet.SignalR;
 
@@ -13,21 +14,36 @@ namespace FancyChat.Services.Hubs
     {
         private FancyChatContext db = FancyChatContext.Create();
 
-        static List<UserModel> users = new List<UserModel>();
-        //todo: add online users
+       
         
         public void Connect(string userName)
         {
-            
+            var onlineUsers = db.OnlineUsers;
             var id = Context.ConnectionId;
+            var user = db.Users.FirstOrDefault(u => u.UserName == userName);
 
 
-            if (users.Count(x => x.ConnectionId == id) == 0)
+
+            if (onlineUsers.Count(x => x.ConnectionId == id) == 0)
             {
-                users.Add(new UserModel() { ConnectionId = id, UserName = userName });
+                onlineUsers.Add(new OnlineUser()
+                {
+                    ConnectionId = id,
+                    User = user
+
+                });
+                db.SaveChanges();
+
+                var onlineUsersList = db.OnlineUsers.Select(u => new UserModel()
+                {
+                    ConnectionId = u.ConnectionId,
+                    UserName = u.User.UserName
+                });
 
                 // send to caller
-                Clients.Caller.onConnected(id, userName, users);
+                Clients.Caller.onConnected(id, userName, onlineUsersList); //todo: this method isnt called
+               
+               
 
                 // send to all except caller client
                 Clients.Others.onNewUserConnected(id, userName);
@@ -45,45 +61,62 @@ namespace FancyChat.Services.Hubs
 
         public void SendPrivateMessage(string toUserId, string message)
         {
+            var onlineUsers = db.OnlineUsers;
             string fromUserId = Context.ConnectionId;
 
-            var toUser = users.FirstOrDefault(x => x.ConnectionId == toUserId);
-            var fromUser = users.FirstOrDefault(x => x.ConnectionId == fromUserId);
+            var toUser = onlineUsers.FirstOrDefault(x => x.ConnectionId == toUserId);
+            var fromUser = onlineUsers.FirstOrDefault(x => x.ConnectionId == fromUserId);
 
             if (toUser != null && fromUser != null)
             {
                 // send to 
-                Clients.Client(toUserId).sendPrivateMessage(fromUserId, fromUser.UserName, message);
+                Clients.Client(toUserId).sendPrivateMessage(fromUserId, fromUser.User.UserName, message);
 
                 // send to caller user
-                Clients.Caller.sendPrivateMessage(toUserId, fromUser.UserName, message);
+                Clients.Caller.sendPrivateMessage(toUserId, fromUser.User.UserName, message);
             }
+            db.SaveChanges();
+
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
+            var onlineUsers = db.OnlineUsers;
+
             if (stopCalled)
             {
-                var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
-                if (item != null)
+                var item = onlineUsers.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                var newUserModel = new UserModel()
                 {
-                    users.Remove(item);
+                    ConnectionId = item.ConnectionId,
+                    UserName = item.User.UserName
+                };
+                
+               
+                if (newUserModel != null)
+                {
+                    Clients.All.messageReceived(newUserModel.UserName, "has left the chat.");
+
+                    onlineUsers.Remove(item);
 
                     var id = Context.ConnectionId;
-                    Clients.All.onUserDisconnected(id, item.UserName);
+                    Clients.All.onUserDisconnected(id, newUserModel.UserName);
                 }
             }
             else
             {
-                var item = users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                var item = onlineUsers.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
                 if (item != null)
                 {
-                    users.Remove(item);
+                    onlineUsers.Remove(item);
 
                     var id = Context.ConnectionId;
-                    Clients.All.onUserDisconnected(id, item.UserName);
+                    Clients.All.onUserDisconnected(id, item.User.UserName);
                 }
             }
+
+            db.SaveChanges();
+
            
             
 

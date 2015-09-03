@@ -29,8 +29,9 @@ namespace FancyChat.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public IDbSet<PublicMessage> PublicMessages { get; set; }
+        public  IDbSet<PublicMessage> PublicMessages { get; set; }
         public IDbSet<PrivateMessage> PrivateMessages { get; set; }
         public IDbSet<Chat> Chats { get; set; }
+        public IDbSet<OnlineUser> OnlineUsers { get; set; }
     }
 }
