@@ -14,7 +14,7 @@ namespace FancyChat.Models
         public DateTime DateTime { get; set; }
         public string SenderId { get; set; }
         [ForeignKey("SenderId")]
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUser Sender { get; set; }
         public string RecieverId { get; set; }
         [ForeignKey("RecieverId")]
         public ApplicationUser Reciever { get; set; }

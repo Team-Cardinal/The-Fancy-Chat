@@ -1,14 +1,14 @@
 ﻿$(function () {
     var isLogged = false;
-   
-    
+
+
 
     setScreen(isLogged);
 
     // Declare a proxy to reference the hub. 
     var chatHub = $.connection.chatHub;
 
-    
+
 
 
     registerClientMethods(chatHub);
@@ -33,7 +33,7 @@ function setScreen(isLogged) {
     }
     else {
 
-        $("#divChat").show();
+        //$("#divChat").show();
         $("#divLogin").hide();
         $("#divRegister").hide();
         $("#divHome").show();
@@ -86,7 +86,7 @@ function registerEvents(chatHub) {
                 }
             }
         }
-        
+
     });
 
     //click on login button
@@ -107,16 +107,15 @@ function registerEvents(chatHub) {
                 sessionStorage.setItem("username", name);
                 sessionStorage.setItem("authorizationToken", data.access_token);
                 chatHub.server.connect(name);
+                GetActiveChats(name);
                 console.log(data);
-
-                
 
             }).fail(function (data) {
                 console.log("Invalid username or password");
             });
         }
         else {
-            
+
             if (name.length < 1) {
                 alert("Please enter name!");
             }
@@ -146,6 +145,8 @@ function registerEvents(chatHub) {
                 }
             }).done(function (data) {
                 alert("Chat has been successfully created.");
+                GetActiveChats(currentUser);
+
             }).fail(function (data) {
                 console.log("Some error message.")
             });
@@ -156,7 +157,7 @@ function registerEvents(chatHub) {
     $('#btnSendMsg').click(function () {
 
         var msg = $("#txtMessage").val();
-       
+
         if (msg.length > 0) {
 
             var userName = sessionStorage.getItem("username");
@@ -245,7 +246,7 @@ function registerClientMethods(chatHub) {
     chatHub.client.onUserDisconnected = function (id, userName) {
 
         $('#' + id).remove();
-        
+
         var ctrId = 'private_' + id;
         $('#' + ctrId).remove();
 
@@ -302,7 +303,7 @@ function AddUser(chatHub, id, name) {
     }
     else {
 
-        html = $('<a id="' + id + '" class="user" >' + name +"2" + '<a>');
+        html = $('<a id="' + id + '" class="user" >' + name + "2" + '<a>');
 
         $(html).dblclick(function () {
 
@@ -367,11 +368,11 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
 
         $textBox = $div.find("#txtPrivateMessage");
         var msg = $textBox.val();
-        
+
         console.log(msg);
-        
+
         if (msg.length > 0) {
-            
+
             chatHub.server.sendPrivateMessage(userId, msg);
             $textBox.val('');
         }
@@ -398,4 +399,22 @@ function AddDivToContainer($div) {
 
         }
     });
+}
+
+//show all active chats for a specific user
+function GetActiveChats(username) {
+    $.ajax({
+        url: "http://localhost:24252/api/chats/" + username,
+        metod: "GET"
+    }).done(function (result) {
+        for (var i = 0; i < result.length; i++) {
+            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat" onclick="ShowActiveChat()">' + result[i].Name + '</span></div>');
+        }
+        console.log(result);
+    });
+}
+
+
+function ShowActiveChat() {
+    $("#divChat").show();
 }

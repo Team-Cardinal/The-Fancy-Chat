@@ -21,16 +21,16 @@ namespace FancyChat.Services.Controllers
         {
             var chats = db.Chats.Where(c => c.Users.Any(u => u.UserName == username))
                             .Select(ch => new {
+                                ch.Id,
                                 ch.Name,
                                 ch.CreatedOn
-                            })
-                            .ToList();
+                            }).AsQueryable();
 
             return this.Ok(chats);
         }
 
         [HttpGet]
-        //GET /api/{user}/chats/{chatId}
+        //GET /api/chats/{username}/{chatId}
         public IHttpActionResult GetSpecificChat()
         {
             throw new NotImplementedException();

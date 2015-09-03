@@ -57,6 +57,11 @@
         border-bottom: solid 1px #5f9482;
     }
 
+    .chatHome .content .chatWindow .activeChat:hover {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
 .chatRoom {
     width: 650px;
     margin-left: auto;
