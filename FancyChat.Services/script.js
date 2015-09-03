@@ -201,12 +201,7 @@ function registerClientMethods(chatHub) {
 
     // Calls when user successfully logged in
     chatHub.client.onConnected = function (id, userName, allUsers) {
-        console.log("SAdsdsadsadassa");
-        console.log(id);
-        console.log(userName);
-        console.log(allUsers);
-
-
+      
         var currentUser = sessionStorage.getItem("userName");
         setScreen(true);
         
@@ -264,7 +259,9 @@ function registerClientMethods(chatHub) {
        
 
     }
-
+    chatHub.client.serverOrderedDisconnect = function () {
+        $.connection.hub.stop();
+    };
     chatHub.client.messageReceived = function (userName, message) {
 
         AddMessage(userName, message);

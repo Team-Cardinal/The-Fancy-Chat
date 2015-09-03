@@ -95,7 +95,7 @@ namespace FancyChat.Services.Hubs
                
                 if (newUserModel != null)
                 {
-                    Clients.All.messageReceived(newUserModel.UserName, "has left the chat.");
+                   
 
                     onlineUsers.Remove(item);
 
@@ -106,12 +106,21 @@ namespace FancyChat.Services.Hubs
             else
             {
                 var item = onlineUsers.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
-                if (item != null)
+                var newUserModel = new UserModel()
                 {
+                    ConnectionId = item.ConnectionId,
+                    UserName = item.User.UserName
+                };
+
+
+                if (newUserModel != null)
+                {
+
+
                     onlineUsers.Remove(item);
 
                     var id = Context.ConnectionId;
-                    Clients.All.onUserDisconnected(id, item.User.UserName);
+                    Clients.All.onUserDisconnected(id, newUserModel.UserName);
                 }
             }
 
