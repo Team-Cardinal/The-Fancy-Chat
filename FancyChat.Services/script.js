@@ -125,6 +125,10 @@ function registerEvents(chatHub) {
         }
     });
 
+    $("#btnLogout").click(function () {
+        chatHub.server.disconnectUser(true);
+    });
+
     //click on Start New Chat button
     $("#btnCreateChat").click(function () {
 
@@ -198,14 +202,14 @@ function registerEvents(chatHub) {
 }
 
 function registerClientMethods(chatHub) {
-    
+
 
     // Calls when user successfully logged in
     chatHub.client.onConnected = function (id, userName, allUsers) {
-      
+
         var currentUser = sessionStorage.getItem("userName");
         setScreen(true);
-        
+
         $('#hdId').val(id);
         $('#hdUserName').val(userName);
         $('#spanUser').html(userName);
@@ -257,7 +261,7 @@ function registerClientMethods(chatHub) {
         $('#divusers').prepend(disc);
         $(disc).fadeIn(200).delay(2000).fadeOut(200);
 
-       
+
 
     }
     chatHub.client.serverOrderedDisconnect = function () {
