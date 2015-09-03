@@ -66,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FancyChat.Models\FancyChat.Models.csproj">
-      <Project>{9BF2DD62-9719-4D58-9640-E10FF2682316}</Project>
+      <Project>{9bf2dd62-9719-4d58-9640-e10ff2682316}</Project>
       <Name>FancyChat.Models</Name>
     </ProjectReference>
   </ItemGroup>

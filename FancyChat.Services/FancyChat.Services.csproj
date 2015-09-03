@@ -239,6 +239,7 @@
     <Compile Include="Models\ChatBindingModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MessageModel.cs" />
+    <Compile Include="Models\OnlineUserModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
