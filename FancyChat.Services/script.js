@@ -40,9 +40,19 @@ function setScreen(isLogged) {
     }
 
 }
+var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+};
 
-function escapeHtml(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
 }
 
 function registerEvents(chatHub) {
@@ -58,7 +68,7 @@ function registerEvents(chatHub) {
         } else {
             if (name.length > 0 && password.length > 0) {
                 $.ajax({
-                    url: "http://localhost:24252/api/account/register",
+                    url: "http://fancychat.cloudapp.net/api/account/register",
                     method: "POST",
                     data: {
                         "email": email,
@@ -96,13 +106,14 @@ function registerEvents(chatHub) {
         var password = $("#txtPassword").val();
         if (name.length > 0 && password.length > 0) {
             $.ajax({
-                url: "http://localhost:24252/token",
-                method: "POST",
-                data: {
+                url: "http://fancychat.cloudapp.net/token",
+                method: "POST",              
+                data: ({
                     "userName": name,
                     "password": password,
                     "grant_type": "password"
-                }
+                })
+                
             }).done(function (data) {
                 sessionStorage.setItem("username", name);
                 sessionStorage.setItem("authorizationToken", data.access_token);
@@ -140,7 +151,7 @@ function registerEvents(chatHub) {
             console.log(currentUser);
 
             $.ajax({
-                url: "http://localhost:24252/api/chats",
+                url: "http://fancychat.cloudapp.net/api/chats",
                 method: "POST",
                 data: {
                     "Name": currentUser + " " + chatPartner,
@@ -166,7 +177,7 @@ function registerEvents(chatHub) {
 
             var userName = sessionStorage.getItem("username");
             $.ajax({
-                url: "http://localhost:24252/api/messages",
+                url: "http://fancychat.cloudapp.net/api/messages",
                 method: "POST",
                 data: {
                     "Message": escapeHtml(msg),
@@ -222,7 +233,7 @@ function registerClientMethods(chatHub) {
 
         // Add Existing Messages
         $.ajax({
-            url: "http://localhost:24252/api/messages",
+            url: "http://fancychat.cloudapp.net/api/messages",
             method: "GET",
 
         }).done(function (data) {
@@ -408,7 +419,7 @@ function AddDivToContainer($div) {
 //show all active chats for a specific user
 function GetActiveChats(username) {
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username,
+        url: "http://fancychat.cloudapp.net/api/chats/" + username,
         metod: "GET"
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {

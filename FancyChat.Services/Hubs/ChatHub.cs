@@ -41,7 +41,7 @@ namespace FancyChat.Services.Hubs
                 });
 
                 // send to caller
-                Clients.Caller.onConnected(id, userName, onlineUsersList); //todo: this method isnt called
+                Clients.Caller.onConnected(id, userName, onlineUsersList);
                
                
 

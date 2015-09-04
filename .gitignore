@@ -136,6 +136,7 @@ packages/
 # Windows Azure Build Output
 csx
 *.build.csdef
+FancyChat.Services.Azure/
 
 # Windows Store app package directory
 AppPackages/

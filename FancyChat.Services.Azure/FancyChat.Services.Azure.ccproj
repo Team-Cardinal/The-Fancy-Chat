@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>2.7</ProductVersion>
-    <ProjectGuid>f08a5993-14fc-4ed3-8f86-e038763db7d9</ProjectGuid>
+    <ProjectGuid>1d5162b0-20fb-4456-b00e-046ea759b1de</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FancyChat.Services.Azure</RootNamespace>
