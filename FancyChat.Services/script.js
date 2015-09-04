@@ -1,7 +1,8 @@
 ﻿$(function () {
     var isLogged = false;
 
-
+    //azure: http://fancychat.cloudapp.net
+    //localhost http://localhost:24252
 
     setScreen(isLogged);
 
@@ -68,7 +69,7 @@ function registerEvents(chatHub) {
         } else {
             if (name.length > 0 && password.length > 0) {
                 $.ajax({
-                    url: "http://fancychat.cloudapp.net/api/account/register",
+                    url: "http://localhost:24252/api/account/register",
                     method: "POST",
                     data: {
                         "email": email,
@@ -106,7 +107,7 @@ function registerEvents(chatHub) {
         var password = $("#txtPassword").val();
         if (name.length > 0 && password.length > 0) {
             $.ajax({
-                url: "http://fancychat.cloudapp.net/token",
+                url: "http://localhost:24252/token",
                 method: "POST",              
                 data: ({
                     "userName": name,
@@ -151,7 +152,7 @@ function registerEvents(chatHub) {
             console.log(currentUser);
 
             $.ajax({
-                url: "http://fancychat.cloudapp.net/api/chats",
+                url: "http://localhost:24252/api/chats",
                 method: "POST",
                 data: {
                     "Name": currentUser + " " + chatPartner,
@@ -177,7 +178,7 @@ function registerEvents(chatHub) {
 
             var userName = sessionStorage.getItem("username");
             $.ajax({
-                url: "http://fancychat.cloudapp.net/api/messages",
+                url: "http://localhost:24252/api/messages",
                 method: "POST",
                 data: {
                     "Message": escapeHtml(msg),
@@ -233,7 +234,7 @@ function registerClientMethods(chatHub) {
 
         // Add Existing Messages
         $.ajax({
-            url: "http://fancychat.cloudapp.net/api/messages",
+            url: "http://localhost:24252/api/messages",
             method: "GET",
 
         }).done(function (data) {
@@ -423,7 +424,7 @@ function AddDivToContainer($div) {
 //show all active chats for a specific user
 function GetActiveChats(username) {
     $.ajax({
-        url: "http://fancychat.cloudapp.net/api/chats/" + username,
+        url: "http://localhost:24252/api/chats/" + username,
         metod: "GET"
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
