@@ -79,6 +79,11 @@ namespace FancyChat.Services.Hubs
 
         }
 
+        public void DisconnectUser(bool isDisconnected)
+        {
+            this.OnDisconnected(isDisconnected);
+        }
+
         public override Task OnDisconnected(bool stopCalled)
         {
             var onlineUsers = db.OnlineUsers;
@@ -126,12 +131,7 @@ namespace FancyChat.Services.Hubs
 
             db.SaveChanges();
 
-           
-            
-
-            return base.OnDisconnected(true);
+            return base.OnDisconnected(stopCalled);
         }
-
-        
     }
 }

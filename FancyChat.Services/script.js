@@ -125,6 +125,10 @@ function registerEvents(chatHub) {
         }
     });
 
+    $("#btnLogout").click(function () {
+        chatHub.server.disconnectUser(true);
+    });
+
     //click on Start New Chat button
     $("#btnCreateChat").click(function () {
 
