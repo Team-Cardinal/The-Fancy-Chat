@@ -288,6 +288,7 @@ function registerClientMethods(chatHub) {
 
         var ctrId = 'private_' + windowId;
 
+        message = CheckForSmiley(message);
 
         if ($('#' + ctrId).length == 0) {
 
@@ -335,7 +336,10 @@ function AddUser(chatHub, id, name) {
 }
 
 function AddMessage(userName, message) {
-    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+
+    message = CheckForSmiley(message);
+
+    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + (message) + '</div>');
 
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
@@ -432,4 +436,23 @@ function GetActiveChats(username) {
 
 function ShowActiveChat() {
     $("#divChat").show();
+}
+
+
+
+function CheckForSmiley(message) {
+
+    message = message.replace(":)", "<img src=\"Smilies/EmoticonHappy.gif\" />");
+    message = message.replace(":D", "<img src=\"Smilies/EmoticonBigSmile.gif\" />");
+    message = message.replace(";)", "<img src=\"Smilies/EmoticonWink.gif\" />");
+    message = message.replace("8D", "<img src=\"Smilies/EmoticonCool.gif\" />");
+    message = message.replace(":I", "<img src=\"Smilies/EmoticonShy.gif\" />");
+    message = message.replace(":P", "<img src=\"Smilies/EmoticonTongue.gif\" />");
+    message = message.replace(":(", "<img src=\"Smilies/EmoticonSad.gif\" />");
+    message = message.replace("X(", "<img src=\"Smilies/EmoticonAngry.gif\" />");
+    message = message.replace(":'(", "<img src=\"Smilies/EmoticonCrying.gif\" />");
+    message = message.replace(":O", "<img src=\"Smilies/EmoticonSurprised.gif\" />");
+    message = message.replace("(rofl)", "<img src=\"Smilies/EmoticonHysterical.gif\" />");
+
+    return message;
 }
