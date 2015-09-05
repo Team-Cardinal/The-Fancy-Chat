@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ServiceConfiguration serviceName="FancyChat.Services.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2015-04.2.6">
-  <Role name="FancyChat.Services">
-    <Instances count="1" />
-    <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=fancychat;AccountKey=yUXJyIV024CaQA0ka5YpKd0JW8bdtUjD3zou14wZeL3hU8kS2xFOX++rTtY/mjWCYfAFPWWpjReP5sIqQI5F/Q==" />
-    </ConfigurationSettings>
-  </Role>
-</ServiceConfiguration>
