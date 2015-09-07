@@ -26,6 +26,9 @@ namespace FancyChat.Data
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(c => c.Chats);
 
+            modelBuilder.Entity<Chat>()
+                .HasMany(m => m.Messages);
+
             base.OnModelCreating(modelBuilder);
         }
 

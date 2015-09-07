@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FancyChat.Models
 {
-    public class PrivateMessage 
+    public class PrivateMessage
     {
         public int Id { get; set; }
         public string Text { get; set; }
@@ -15,8 +15,11 @@ namespace FancyChat.Models
         public string SenderId { get; set; }
         [ForeignKey("SenderId")]
         public virtual ApplicationUser Sender { get; set; }
-        public string RecieverId { get; set; }
-        [ForeignKey("RecieverId")]
-        public ApplicationUser Reciever { get; set; }
+        //public string RecieverId { get; set; }
+        //[ForeignKey("RecieverId")]
+        //public ApplicationUser Reciever { get; set; }
+        public int ChatId { get; set; }
+        [ForeignKey("ChatId")]
+        public virtual Chat Chat { get; set; }
     }
 }

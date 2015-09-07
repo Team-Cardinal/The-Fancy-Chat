@@ -24,12 +24,8 @@ namespace FancyChat.Models
             return userIdentity;
         }
 
-
-
         public virtual ICollection<Chat> Chats { get; set; }
-
         public virtual ICollection<PublicMessage> PublicMessages { get; set; }
         public virtual ICollection<PrivateMessage> PrivateMessages { get; set; }
-
     }      
 }

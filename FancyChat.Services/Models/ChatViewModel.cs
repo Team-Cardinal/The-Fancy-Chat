@@ -5,14 +5,10 @@ using System.Web;
 
 namespace FancyChat.Services.Models
 {
-    public class ChatBindingModel
+    public class ChatViewModel
     {
-        //public string Name { get; set; }
-
-        //public DateTime CreatedOn { get; set; }
-
-        public string CurrentUser { get; set; }
-
+        public int Id { get; set; }
+        public DateTime CreatedOn { get; set; }
         public string ChatPartner { get; set; }
     }
 }

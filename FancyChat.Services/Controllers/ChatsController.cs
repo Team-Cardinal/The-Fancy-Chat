@@ -19,21 +19,63 @@ namespace FancyChat.Services.Controllers
         [Route("api/chats/{username}")]
         public IHttpActionResult GetAllChats(string username)
         {
+            var activeChats = new List<ChatViewModel>();
+
             var chats = db.Chats.Where(c => c.Users.Any(u => u.UserName == username))
-                            .Select(ch => new {
+                            .Select(ch => new
+                            {
                                 ch.Id,
                                 ch.Name,
                                 ch.CreatedOn
                             }).AsQueryable();
 
-            return this.Ok(chats);
+            foreach (var chat in chats)
+            {
+                var participants = chat.Name.Split();
+
+                if (participants[0] == username)
+                {
+                    var currActiveChat = new ChatViewModel
+                    {
+                        Id = chat.Id,
+                        CreatedOn = chat.CreatedOn,
+                        ChatPartner = participants[1]
+                    };
+
+                    activeChats.Add(currActiveChat);
+                }
+                else
+                {
+                    var currActiveChat = new ChatViewModel
+                    {
+                        Id = chat.Id,
+                        CreatedOn = chat.CreatedOn,
+                        ChatPartner = participants[0]
+                    };
+
+                    activeChats.Add(currActiveChat);
+                }
+            }
+
+            return this.Ok(activeChats);
         }
 
         [HttpGet]
-        //GET /api/chats/{username}/{chatId}
-        public IHttpActionResult GetSpecificChat()
+        //GET /api/chats/{chatId}
+        [Route("api/chats/{username}/{chatId}")]
+        public IHttpActionResult GetPrivateChat(string username, int chatId)
         {
-            throw new NotImplementedException();
+
+
+            var currentChatMessages = db.PrivateMessages
+                                        .Where(m => m.ChatId == chatId)
+                                        .Select(m => new PrivateMessageViewModel
+                                        {
+                                            Name = m.Sender.UserName,
+                                            MessageContent = m.Text
+                                        }).AsQueryable();
+
+            return this.Ok(currentChatMessages);
         }
 
 
@@ -45,26 +87,71 @@ namespace FancyChat.Services.Controllers
             ApplicationUser currUser = db.Users.FirstOrDefault(u => u.UserName == newChat.CurrentUser);
             ApplicationUser chatPartner = db.Users.FirstOrDefault(u => u.UserName == newChat.ChatPartner);
 
-            var chat = new Chat()
+            if (chatPartner == null)
             {
-                Name = newChat.Name,
-                CreatedOn = DateTime.Now,
+                return this.NotFound();
+            }
+
+            if (currUser.UserName == chatPartner.UserName)
+            {
+                return this.BadRequest("You cannot start chat with yourself.");
+            }
+
+            string newChatName = currUser.UserName + " " + chatPartner.UserName;
+            string newChatNameAlt = chatPartner.UserName + " " + currUser.UserName;
+
+            if (!(db.Chats.Any(c => c.Name == newChatName || c.Name == newChatNameAlt) ||
+                db.Chats.Any(c => c.AlternativeName == newChatName || c.AlternativeName == newChatNameAlt)))
+            {
+                var chat = new Chat()
+                {
+                    Name = newChatName,
+                    AlternativeName = newChatNameAlt,
+                    CreatedOn = DateTime.Now,
+                };
+
+                chat.Users.Add(currUser);
+                chat.Users.Add(chatPartner);
+
+                db.Chats.Add(chat);
+                db.SaveChanges();
+            }
+            else
+            {
+                return this.BadRequest("Chat already exists.");
+            }
+
+            var createdChat = db.Chats.OrderBy(ch => ch.CreatedOn)
+                                    .FirstOrDefault();
+
+            var chatToReturn = new ChatViewModel
+            {
+                Id = createdChat.Id,
+                CreatedOn = createdChat.CreatedOn,
+                ChatPartner = chatPartner.UserName
             };
 
-            chat.Users.Add(currUser);
-            chat.Users.Add(chatPartner);
-
-            db.Chats.Add(chat);
-            db.SaveChanges();
-
-            return this.Ok();
+            return this.Ok(chatToReturn);
         }
 
         [HttpPost]
-        //POST /api/{user}/chats/{chatId}
-        public IHttpActionResult PostChatMessage()
+        //POST /api/chats/{username}/{chatId}
+        [Route("api/chats/{username}/{chatId}")]
+        public IHttpActionResult PostPrivateChatMessage(PrivateMessageBindingModel model)
         {
-            throw new NotImplementedException();
+            ApplicationUser sender = db.Users.FirstOrDefault(u => u.UserName == model.Sender);
+
+            var message = new PrivateMessage() { 
+                Text = model.Content,
+                DateTime = DateTime.Now,
+                ChatId = model.ChatId,
+                SenderId = sender.Id
+            };
+
+            db.PrivateMessages.Add(message);
+            db.SaveChanges();
+
+            return this.Ok();
         }
     }
 }

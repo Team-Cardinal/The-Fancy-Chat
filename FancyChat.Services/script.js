@@ -33,7 +33,7 @@ function setScreen(isLogged) {
     }
     else {
 
-        //$("#divChat").show();
+        $("#divChat").show();
         $("#divLogin").hide();
         $("#divRegister").hide();
         $("#divHome").show();
@@ -143,16 +143,16 @@ function registerEvents(chatHub) {
                 url: "http://localhost:24252/api/chats",
                 method: "POST",
                 data: {
-                    "Name": currentUser + " " + chatPartner,
+                    //"Name": currentUser + " " + chatPartner,
                     "CurrentUser": currentUser,
-                    "ChatPartner": chatPartner
+                    "ChatPartner": escapeHtml(chatPartner)
                 }
             }).done(function (data) {
                 alert("Chat has been successfully created.");
-                GetActiveChats(currentUser);
+                AppendNewActiveChat(data);
 
             }).fail(function (data) {
-                console.log("Some error message.")
+                console.log(data.responseText);
             });
         }
     });
@@ -342,14 +342,17 @@ function OpenPrivateChatWindow(chatHub, id, userName) {
 }
 
 function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
+//function createPrivateChatWindow(chatHub, data) {
 
     var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
+    //var div = '<div id="' + data.Id + '" class="ui-widget-content draggable" rel="0">' +
                '<div class="header">' +
                   '<div  style="float:right;">' +
                       '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/>' +
                    '</div>' +
 
                    '<span class="selText" rel="0">' + userName + '</span>' +
+                   //'<span class="selText" rel="0">' + data.ChatPartner + '</span>' +
                '</div>' +
                '<div id="divMessage" class="messageArea">' +
 
@@ -408,17 +411,32 @@ function AddDivToContainer($div) {
 //show all active chats for a specific user
 function GetActiveChats(username) {
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username,
+        url: "http://localhost:24252/api/chats/" + escapeHtml(username),
         metod: "GET"
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
-            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat" onclick="ShowActiveChat()">' + result[i].Name + '</span></div>');
+            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat" onclick="GetPrivateChat(' + result[i].Id + ',' + sessionStorage.getItem("username") + ')">' + result[i].ChatPartner + '</span></div>');
         }
         console.log(result);
     });
 }
 
+function AppendNewActiveChat(data) {
+    $('#divHome').find('#divActiveChats').append('<div id="' + data.Id + '"><span class="activeChat" onclick="GetPrivateChat(' + data.Id + ',' + sessionStorage.getItem("username") + ')">' + data.ChatPartner + '</span></div>');
+}
+
 
 function ShowActiveChat() {
     $("#divChat").show();
+}
+
+function GetPrivateChat(username, id) {
+    $.ajax({
+        url: "http://localhost:24252/api/chats/" + username + "/" + id,
+        method: "GET",
+
+    }).done(function (result) {
+        //OpenPrivateChatWindow(chatHub, result.Id, result.ChatPartner)
+        createPrivateChatWindow(chatHub, result)
+    });
 }
