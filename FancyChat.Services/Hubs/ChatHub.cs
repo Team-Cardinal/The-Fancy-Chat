@@ -105,7 +105,9 @@ namespace FancyChat.Services.Hubs
                     onlineUsers.Remove(item);
 
                     var id = Context.ConnectionId;
+                    Clients.Caller.onCurrentUserDisconnected();
                     Clients.All.onUserDisconnected(id, newUserModel.UserName);
+                    
                 }
             }
             else
@@ -120,11 +122,10 @@ namespace FancyChat.Services.Hubs
 
                 if (newUserModel != null)
                 {
-
-
                     onlineUsers.Remove(item);
 
                     var id = Context.ConnectionId;
+                    Clients.Caller.onCurrentUserDisconnected();
                     Clients.All.onUserDisconnected(id, newUserModel.UserName);
                 }
             }

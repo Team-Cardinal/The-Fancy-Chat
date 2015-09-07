@@ -13,7 +13,7 @@ namespace FancyChat.Services.Controllers
     public class MessagesController : ApiController
     {
         private FancyChatContext db = FancyChatContext.Create();
-
+        [Authorize]
         public IHttpActionResult GetMessages()
         {
             var messages = db.PublicMessages.Select(m => new MessageModel()
@@ -32,7 +32,7 @@ namespace FancyChat.Services.Controllers
             return Ok(messages);
 
         }
-
+        [Authorize]        
         public IHttpActionResult PostMessage(MessageModel message)
         {
             var sender = db.Users.FirstOrDefault(u => u.UserName == message.SenderUserName);

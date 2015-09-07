@@ -175,11 +175,15 @@ function registerEvents(chatHub) {
         var msg = $("#txtMessage").val();
 
         if (msg.length > 0) {
-
+            
             var userName = sessionStorage.getItem("username");
+            var token = sessionStorage.getItem("authorizationToken");
             $.ajax({
                 url: "http://localhost:24252/api/messages",
                 method: "POST",
+                headers: {
+                    "Authorization": "bearer " + token
+                },
                 data: {
                     "Message": escapeHtml(msg),
                     "SenderUserName": userName,
@@ -219,7 +223,9 @@ function registerClientMethods(chatHub) {
     // Calls when user successfully logged in
     chatHub.client.onConnected = function (id, userName, allUsers) {
 
-        var currentUser = sessionStorage.getItem("userName");
+        
+        var token = sessionStorage.getItem("authorizationToken");
+
         setScreen(true);
 
         $('#hdId').val(id);
@@ -236,6 +242,9 @@ function registerClientMethods(chatHub) {
         $.ajax({
             url: "http://localhost:24252/api/messages",
             method: "GET",
+            headers: {
+                "Authorization": "bearer " + token
+            }
 
         }).done(function (data) {
             console.log(data);
@@ -257,6 +266,9 @@ function registerClientMethods(chatHub) {
         AddUser(chatHub, id, name);
     }
 
+    chatHub.client.onCurrentUserDisconnected = function() {
+        sessionStorage.clear();
+    }
 
     // On User Disconnected
     chatHub.client.onUserDisconnected = function (id, userName) {
@@ -276,9 +288,7 @@ function registerClientMethods(chatHub) {
 
 
     }
-    chatHub.client.serverOrderedDisconnect = function () {
-        $.connection.hub.stop();
-    };
+    
     chatHub.client.messageReceived = function (userName, message) {
 
         AddMessage(userName, message);
@@ -426,9 +436,13 @@ function AddDivToContainer($div) {
 
 //show all active chats for a specific user
 function GetActiveChats(username) {
+    var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
         url: "http://localhost:24252/api/chats/" + escapeHtml(username),
-        metod: "GET"
+        metod: "GET",
+        headers: {
+            "Authorization": "bearer " + token
+        }
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
             $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat" onclick="GetPrivateChat(' + result[i].Id + ',' + sessionStorage.getItem("username") + ')">' + result[i].ChatPartner + '</span></div>');
@@ -448,8 +462,12 @@ function ShowActiveChat() {
 
 
 function GetPrivateChat(username, id) {
+    var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
         url: "http://localhost:24252/api/chats/" + username + "/" + id,
+        headers: {
+            "Authorization": "bearer " + token
+        },
         method: "GET",
 
     }).done(function (result) {
