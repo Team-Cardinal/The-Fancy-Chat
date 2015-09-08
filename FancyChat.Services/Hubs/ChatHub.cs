@@ -59,27 +59,38 @@ namespace FancyChat.Services.Hubs
             Clients.All.messageReceived(userName, message);
         }
 
-        public void SendPrivateMessage(string toUserId, string message)
+        public void SendPrivateMessage(int chatId, string message)
         {
             var onlineUsers = db.OnlineUsers;
             string fromUserId = Context.ConnectionId;
+            var chat = db.Chats.Find(chatId);
 
-            var toUser = onlineUsers.FirstOrDefault(x => x.ConnectionId == toUserId);
+            // TODO..
+            if (chat == null)
+            {
+                return;
+            }
+
+            //var toUser = onlineUsers.FirstOrDefault(x => x.ConnectionId == toUserId);
             var fromUser = onlineUsers.FirstOrDefault(x => x.ConnectionId == fromUserId);
+            var toUser = chat.Users.FirstOrDefault(u => u.Id != fromUser.UserId);
 
-            if (toUser != null && fromUser != null)
+            var toUserConnection = onlineUsers.OrderByDescending(u => u.Id).FirstOrDefault(u => u.UserId == toUser.Id);
+
+            if (toUserConnection != null && fromUser != null)
             {
                 // send to 
-                Clients.Client(toUserId).sendPrivateMessage(fromUserId, fromUser.User.UserName, message);
+                //Clients.Client(toUserConnectionId.ConnectionId).sendPrivateMessage(fromUserId, fromUser.User.UserName, message);
+                Clients.Client(toUserConnection.ConnectionId).sendPrivateMessage(chatId, fromUser.User.UserName, message);
 
                 // send to caller user
-                Clients.Caller.sendPrivateMessage(toUserId, fromUser.User.UserName, message);
+                //Clients.Caller.sendPrivateMessage(toUserConnectionId.ConnectionId, fromUser.User.UserName, message);
+                Clients.Caller.sendPrivateMessage(chatId, fromUser.User.UserName, message);
             }
             else
             {
-                Clients.Client(toUserId).sendPrivateMessage(fromUserId, fromUser.User.UserName, message);
+                Clients.Caller.sendPrivateMessage(chatId, fromUser.User.UserName, message);
             }
-            db.SaveChanges();
         }
 
         public void DisconnectUser(bool isDisconnected)

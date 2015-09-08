@@ -13,6 +13,7 @@ namespace FancyChat.Models
     {
         public ApplicationUser()
         {
+            this.Chats = new HashSet<Chat>();
             this.PublicMessages = new HashSet<PublicMessage>();
             this.PrivateMessages = new HashSet<PrivateMessage>();
         }
