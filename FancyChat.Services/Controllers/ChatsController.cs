@@ -121,7 +121,7 @@ namespace FancyChat.Services.Controllers
                 return this.BadRequest("Chat already exists.");
             }
 
-            var createdChat = db.Chats.OrderBy(ch => ch.CreatedOn)
+            var createdChat = db.Chats.OrderByDescending(ch => ch.CreatedOn)
                                     .FirstOrDefault();
 
             var chatToReturn = new ChatViewModel

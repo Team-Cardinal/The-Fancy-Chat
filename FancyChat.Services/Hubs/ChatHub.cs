@@ -75,8 +75,11 @@ namespace FancyChat.Services.Hubs
                 // send to caller user
                 Clients.Caller.sendPrivateMessage(toUserId, fromUser.User.UserName, message);
             }
+            else
+            {
+                Clients.Client(toUserId).sendPrivateMessage(fromUserId, fromUser.User.UserName, message);
+            }
             db.SaveChanges();
-
         }
 
         public void DisconnectUser(bool isDisconnected)
