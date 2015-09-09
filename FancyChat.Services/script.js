@@ -53,7 +53,7 @@ function escapeHtml(string) {
 
 function registerEvents(chatHub) {
 
-    function RegisterRequest(email, name, password, confirmPassword) {
+    function registerRequest(email, name, password, confirmPassword) {
         $.ajax({
             url: "http://localhost:24252/api/account/register",
             method: "POST",
@@ -65,14 +65,14 @@ function registerEvents(chatHub) {
             }
         }).done(function (data) {
             console.log(data);
-            LoginRequest(name, password);
+            loginRequest(name, password);
 
         }).fail(function (data) {
             console.log("Username or email already taken.");
         });
     }
     //click on login button
-    function LoginRequest(name, password) {
+    function loginRequest(name, password) {
         $.ajax({
             url: "http://localhost:24252/api/Account/Login",
             method: "POST",
@@ -105,7 +105,7 @@ function registerEvents(chatHub) {
             console.log("Passwords do not match.");
         } else {
             if (name.length > 0 && password.length > 0) {
-                RegisterRequest(email, name, password, confirmPassword);
+                registerRequest(email, name, password, confirmPassword);
             }
             else {
 
@@ -127,7 +127,7 @@ function registerEvents(chatHub) {
         var name = $("#txtUserName").val();
         var password = $("#txtPassword").val();
         if (name.length > 0 && password.length > 0) {
-            LoginRequest(name, password);
+            loginRequest(name, password);
         }
         else {
 
