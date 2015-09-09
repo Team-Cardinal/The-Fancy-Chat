@@ -46,7 +46,11 @@ var entityMap = {
 };
 
 function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
+    //    return String(string).replace(/<(?!img|\/img).*?>/g, function (s) {
+   // return String(string).replace(/([&<>"'\/])(?!img)/g, function (s) {
+    return String(string).replace(/([&<>"'\/])(?!img)(?!S)(?!Emo)(?! )(?!>)/g, function (s) {
+    
+   // return String(string).replace(/[&<>"'\/]/g, function (s) {
         return entityMap[s];
     });
 }
@@ -358,8 +362,11 @@ function AddMessage(userName, message) {
 
     message = CheckForSmiley(message);
 
-    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
-
+    if (userName == sessionStorage.getItem("username")) {
+        $('#divChatWindow').append('<div class="message"><span class="currentUserName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+    } else {
+        $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+    }
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
 }
@@ -383,7 +390,7 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName, chatId) {
     //var div = '<div id="' + data.Id + '" class="ui-widget-content draggable" rel="0">' +
                '<div class="header">' +
                   '<div  style="float:right;">' +
-                      '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/>' +
+                      '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/ height="18" width="18>' +
                    '</div>' +
 
                    '<span class="selText" rel="0">' + userName + '</span>' +
