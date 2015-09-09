@@ -312,9 +312,9 @@ function registerClientMethods(chatHub) {
         if ($('#' + ctrId).length == 0) {
 
             createPrivateChatWindow(chatHub, windowId, ctrId, fromUserName);
+            GetPrivateChat(sessionStorage.getItem("username"), windowId);
 
         }
-
         $('#' + ctrId).find('#divMessage').append('<div class="message"><span class="userName">' + fromUserName + '</span>: ' + escapeHtml(message) + '</div>');
 
         // set scrollbar
@@ -376,9 +376,9 @@ function OpenPrivateChatWindow(chatHub, id, userName) {
 
 }
 
-function createPrivateChatWindow(chatHub, userId, ctrId, userName, chatId) {
+function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
     //function createPrivateChatWindow(chatHub, data) {
-
+    var chatId = userId;
     var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
     //var div = '<div id="' + data.Id + '" class="ui-widget-content draggable" rel="0">' +
                '<div class="header">' +
@@ -416,7 +416,6 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName, chatId) {
 
         if (msg.length > 0) {
 
-            chatHub.server.sendPrivateMessage(userId, msg);
             SendChatMessage(sessionStorage.getItem("username"), msg, chatId, chatHub);
             $textBox.val('');
         }
@@ -500,20 +499,21 @@ function GetPrivateChat(username, id) {
 }
 
 
-function SendChatMessage(username, message, id, chatHub) {
+function SendChatMessage(username, message, chatId, chatHub) {
     var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username + "/" + id,
+        url: "http://localhost:24252/api/chats/" + username + "/" + chatId,
         headers: {
             "Authorization": "bearer " + token
         },
         method: "POST",
         data: {
-            "ChatId": id,
+            "ChatId": chatId,
             "Content": message,
             "Sender": username,
         }
     }).done(function (data) {
+        chatHub.server.sendPrivateMessage(chatId, message);
         console.log("Private message sent.");
         console.log(data);
     });
