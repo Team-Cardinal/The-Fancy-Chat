@@ -53,6 +53,48 @@ function escapeHtml(string) {
 
 function registerEvents(chatHub) {
 
+    function RegisterRequest(email, name, password, confirmPassword) {
+        $.ajax({
+            url: "http://localhost:24252/api/account/register",
+            method: "POST",
+            data: {
+                "email": email,
+                "userName": name,
+                "password": password,
+                "confirmPassword": confirmPassword
+            }
+        }).done(function (data) {
+            console.log(data);
+            LoginRequest(name, password);
+
+        }).fail(function (data) {
+            console.log("Username or email already taken.");
+        });
+    }
+    //click on login button
+    function LoginRequest(name, password) {
+        $.ajax({
+            url: "http://localhost:24252/api/Account/Login",
+            method: "POST",
+            data: ({
+                "userName": name,
+                "password": password,
+                "grant_type": "password"
+            })
+
+        }).done(function (data) {
+            sessionStorage.setItem("username", name);
+            sessionStorage.setItem("authorizationToken", data.access_token);
+            chatHub.server.connect(name);
+            GetActiveChats(name, chatHub);
+            console.log(data);
+
+
+        }).fail(function (data) {
+            console.log("Invalid username or password");
+        });
+    }
+
     $("#btnRegister").click(function () {
 
         var email = $("#registerEmail").val();
@@ -63,24 +105,7 @@ function registerEvents(chatHub) {
             console.log("Passwords do not match.");
         } else {
             if (name.length > 0 && password.length > 0) {
-                $.ajax({
-                    url: "http://localhost:24252/api/account/register",
-                    method: "POST",
-                    data: {
-                        "email": email,
-                        "userName": name,
-                        "password": password,
-                        "confirmPassword": confirmPassword
-                    }
-                }).done(function (data) {
-                    sessionStorage.setItem("username", name);
-                    sessionStorage.setItem("authorizationToken", data.access_token);
-                    console.log(data);
-                    chatHub.server.connect(name);
-
-                }).fail(function (data) {
-                    console.log("Invalid username or password");
-                });
+                RegisterRequest(email, name, password, confirmPassword);
             }
             else {
 
@@ -95,32 +120,14 @@ function registerEvents(chatHub) {
 
     });
 
-    //click on login button
+
+
     $("#btnLogin").click(function () {
 
         var name = $("#txtUserName").val();
         var password = $("#txtPassword").val();
         if (name.length > 0 && password.length > 0) {
-            $.ajax({
-                url: "http://localhost:24252/token",
-                method: "POST",
-                data: ({
-                    "userName": name,
-                    "password": password,
-                    "grant_type": "password"
-                })
-
-            }).done(function (data) {
-                sessionStorage.setItem("username", name);
-                sessionStorage.setItem("authorizationToken", data.access_token);
-                chatHub.server.connect(name);
-                GetActiveChats(name, chatHub);
-                console.log(data);
-
-
-            }).fail(function (data) {
-                console.log("Invalid username or password");
-            });
+            LoginRequest(name, password);
         }
         else {
 
