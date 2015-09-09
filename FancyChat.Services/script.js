@@ -313,7 +313,9 @@ function registerClientMethods(chatHub) {
             createPrivateChatWindow(chatHub, windowId, ctrId, fromUserName);
             GetPrivateChat(sessionStorage.getItem("username"), windowId);
         }
-        $('#' + ctrId).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + fromUserName + '</span>: ' + escapeHtml(message) + '</div>');
+        else {
+            $('#' + ctrId).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + fromUserName + '</span>: ' + escapeHtml(message) + '</div>');
+        }
 
         // set scrollbar
         var height = $('#' + ctrId).find("#divMessage")[0].scrollHeight;
