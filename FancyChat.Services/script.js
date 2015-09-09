@@ -94,6 +94,29 @@ function registerEvents(chatHub) {
             console.log("Invalid username or password");
         });
     }
+    function sendMessageRequest(msg) {
+        var userName = sessionStorage.getItem("username");
+        var token = sessionStorage.getItem("authorizationToken");
+        $.ajax({
+            url: "http://localhost:24252/api/messages",
+            method: "POST",
+            headers: {
+                "Authorization": "bearer " + token
+            },
+            data: {
+                "Message": msg,
+                "SenderUserName": userName,
+                "DateSent": new Date().toLocaleString()
+            }
+        }).done(function (data) {
+            chatHub.server.sendMessageToAll(userName, msg);
+            $("#txtMessage").val('');
+            console.log(data);
+
+        }).fail(function (data) {
+            console.log("Cannot send message.");
+        });
+    }
 
     $("#btnRegister").click(function () {
 
@@ -175,33 +198,14 @@ function registerEvents(chatHub) {
     });
 
 
+
+
     $('#btnSendMsg').click(function () {
 
         var msg = $("#txtMessage").val();
 
         if (msg.length > 0) {
-
-            var userName = sessionStorage.getItem("username");
-            var token = sessionStorage.getItem("authorizationToken");
-            $.ajax({
-                url: "http://localhost:24252/api/messages",
-                method: "POST",
-                headers: {
-                    "Authorization": "bearer " + token
-                },
-                data: {
-                    "Message": msg,
-                    "SenderUserName": userName,
-                    "DateSent": new Date().toLocaleString()
-                }
-            }).done(function (data) {
-                chatHub.server.sendMessageToAll(userName, msg);
-                $("#txtMessage").val('');
-                console.log(data);
-
-            }).fail(function (data) {
-                console.log("Cannot send message.");
-            });
+            sendMessageRequest(msg);
 
         }
     });
@@ -224,23 +228,8 @@ function registerEvents(chatHub) {
 
 function registerClientMethods(chatHub) {
     // Calls when user successfully logged in
-    chatHub.client.onConnected = function (id, userName, allUsers) {
-
+    function getMessagesRequest() {
         var token = sessionStorage.getItem("authorizationToken");
-
-        setScreen(true);
-
-        $('#hdId').val(id);
-        $('#hdUserName').val(userName);
-        $('#spanUser').html(userName);
-
-        // Add All Users
-        for (i = 0; i < allUsers.length; i++) {
-
-            AddUser(chatHub, allUsers[i].ConnectionId, allUsers[i].UserName);
-        }
-
-        // Add Existing Messages
         $.ajax({
             url: "http://localhost:24252/api/messages",
             method: "GET",
@@ -258,6 +247,25 @@ function registerClientMethods(chatHub) {
         }).fail(function (data) {
             console.log("Could not load messages");
         });
+    }
+
+    chatHub.client.onConnected = function (id, userName, allUsers) {
+
+
+        setScreen(true);
+
+        $('#hdId').val(id);
+        $('#hdUserName').val(userName);
+        $('#spanUser').html(userName);
+
+        // Add All Users
+        for (i = 0; i < allUsers.length; i++) {
+
+            AddUser(chatHub, allUsers[i].ConnectionId, allUsers[i].UserName);
+        }
+
+        // Add Existing Messages
+        getMessagesRequest();
     }
 
     // On New User Connected
