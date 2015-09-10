@@ -233,6 +233,8 @@ function registerEvents(chatHub) {
     $("#btnCreateChat").click(function () {
 
         var chatPartner = $("#chatPartner").val();
+        var token = sessionStorage.getItem("authorizationToken");
+
         //console.log(chatPartner);
         if (chatPartner) {
 
@@ -241,7 +243,8 @@ function registerEvents(chatHub) {
 
             $.ajax({
                 url: "http://localhost:24252/api/chats",
-                method: "POST", headers: {
+                method: "POST",
+                headers: {
                     "Authorization": "bearer " + token
                 },
                 data: {                    
@@ -573,7 +576,7 @@ function GetPrivateChat(username, id) {
         headers: {
             "Authorization": "bearer " + token
         },
-        method: "GET",
+        method: "GET"
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
             $('div #private_' + id).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + result[i].Name + ':' + escapeHtml(result[i].MessageContent) + '</span></div>');
