@@ -68,7 +68,10 @@ function registerEvents(chatHub) {
             loginRequest(name, password);
 
         }).fail(function (data) {
-            console.log("Username or email already taken.");
+            var responsetext = JSON.parse(data.responseText);
+            console.log(responsetext.ModelState["model.UserName"][0]);
+
+
         });
     }
     //click on login button
