@@ -13,6 +13,7 @@
     <!--Script references. -->
     <!--Reference the jQuery library. -->
     <script src="/Scripts/jquery-1.10.2.js"></script>
+    <script src="/Scripts/jquery.noty.packaged.min.js"></script>
 
     <script src="/Scripts/ui/jquery.ui.core.js"></script>
     <script src="/Scripts/ui/jquery.ui.widget.js"></script>
@@ -20,7 +21,7 @@
     <script src="/Scripts/ui/jquery.ui.draggable.js"></script>
     <script src="/Scripts/ui/jquery.ui.resizable.js"></script>
 
-
+    
 
     <!--Reference the SignalR library. -->
     <script src="/Scripts/jquery.signalR-2.2.0.js"></script>
@@ -33,15 +34,15 @@
 </head>
 <body>
     <div id="header">
-        SignalR Chat Room
+        <h4>Team Cardinal - The Fancy Chat. Wellcome!</h4>
     </div>
-    <br />
-    <br />
-    <br />
+
 
     <div id="divContainer">
+
         <div id="divLogin" class="login">
-            <div>
+            <p>Login</p>
+            <div class="loginText">
                 Username:<br />
                 <input id="txtUserName" type="text" class="textBox" />
                 Password:<br />
@@ -49,11 +50,13 @@
             </div>
             <div id="divButton">
                 <input id="btnLogin" type="button" class="submitButton" value="Login" />
-                
+
             </div>
         </div>
+
         <div id="divRegister" class="login">
-            <div>
+            <p>Register</p>
+            <div class="loginText">
                 Email:<br />
                 <input id="registerEmail" type="text" class="textBox" />
                 Username:<br />
@@ -63,7 +66,6 @@
                 Confrim Password: <br />
                 <input id="confirmRegisterPassword" type="text" class="textBox" />
                 <div id="divButton">
-
                     <input id="btnRegister" type="button" class="submitButton" value="Register" />
                 </div>
 

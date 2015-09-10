@@ -46,7 +46,11 @@ var entityMap = {
 };
 
 function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
+    //    return String(string).replace(/<(?!img|\/img).*?>/g, function (s) {
+    // return String(string).replace(/([&<>"'\/])(?!img)/g, function (s) {
+    return String(string).replace(/([&<>"'\/])(?!img)(?!S)(?!Emo)(?! )(?!>)/g, function (s) {
+
+        // return String(string).replace(/[&<>"'\/]/g, function (s) {
         return entityMap[s];
     });
 }
@@ -68,7 +72,13 @@ function registerEvents(chatHub) {
             loginRequest(name, password);
 
         }).fail(function (data) {
-            console.log("Username or email already taken.");
+            noty({
+                text: 'Username or email already taken.',
+                layout: 'center',
+                type: 'error',
+                timeout: 750
+            });
+            //console.log("Username or email already taken.");
         });
     }
     //click on login button
@@ -92,6 +102,14 @@ function registerEvents(chatHub) {
 
         }).fail(function (data) {
             console.log("Invalid username or password");
+            //$.noty.defaults.killer = true;
+
+            noty({
+                text: 'Invalid username or password!',
+                layout: 'center',
+                type: 'error',
+                timeout: 750
+            });
         });
     }
     function sendMessageRequest(msg) {
@@ -114,6 +132,12 @@ function registerEvents(chatHub) {
             console.log(data);
 
         }).fail(function (data) {
+            noty({
+                text:'Cannot send message.',
+                layout: 'center',
+                type: 'error',
+                timeout: 750
+            });
             console.log("Cannot send message.");
         });
     }
@@ -125,7 +149,13 @@ function registerEvents(chatHub) {
         var password = $("#registerPassword").val();
         var confirmPassword = $("#confirmRegisterPassword").val();
         if (password != confirmPassword) {
-            console.log("Passwords do not match.");
+            noty({
+                text: 'Passwords do not match.',
+                layout: 'center',
+                type: 'error',
+                timeout: 750
+            });
+            //console.log("Passwords do not match.");
         } else {
             if (name.length > 0 && password.length > 0) {
                 registerRequest(email, name, password, confirmPassword);
@@ -133,10 +163,23 @@ function registerEvents(chatHub) {
             else {
 
                 if (name.length < 1) {
-                    alert("Please enter name!");
+                    noty({
+                        text: 'Please enter name!',
+                        layout: 'center',
+                        type: 'error',
+                        timeout: 750
+                    });
+
+                    //alert("Please enter name!");
                 }
                 else if (password.length < 1) {
-                    alert("Please enter password!");
+                    //alert("Please enter password!");
+                    noty({
+                        text: 'Please enter password!',
+                        layout: 'center',
+                        type: 'error',
+                        timeout: 750
+                    });
                 }
             }
         }
@@ -155,10 +198,22 @@ function registerEvents(chatHub) {
         else {
 
             if (name.length < 1) {
-                alert("Please enter name!");
+                noty({
+                    text: 'Please enter name!',
+                    layout: 'center',
+                    type: 'error',
+                    timeout: 750
+                });
+                //alert("Please enter name!");
             }
             else if (password.length < 1) {
-                alert("Please enter password!");
+                noty({
+                    text: 'Please enter password!',
+                    layout: 'center',
+                    type: 'error',
+                    timeout: 750
+                });
+                //alert("Please enter password!");
             }
         }
     });
@@ -188,11 +243,33 @@ function registerEvents(chatHub) {
                     "ChatPartner": chatPartner
                 }
             }).done(function (data) {
-                alert("Chat has been successfully created.");
+                //alert("Chat has been successfully created.");
+                noty({
+                    text: 'Chat has been successfully created.',
+                    layout: 'center',
+                    type: 'success',
+                    timeout: 750
+                });
                 AppendNewActiveChat(data, chatHub);
 
             }).fail(function (data) {
-                console.log(data.responseText);
+                console.log((data));
+                if (data.status == 404) {
+                    noty({
+                        text:'This user does not exist',
+                        layout: 'center',
+                        type: 'error',
+                        timeout: 750
+                    });
+                } else {
+                    noty({
+                        text:JSON.parse(data.responseText).Message,
+                        layout: 'center',
+                        type: 'error',
+                        timeout: 750
+                    });
+                }
+                
             });
         }
     });
@@ -245,7 +322,13 @@ function registerClientMethods(chatHub) {
             }
 
         }).fail(function (data) {
-            console.log("Could not load messages");
+            noty({
+                text: 'Could not load messages!',
+                layout: 'center',
+                type: 'error',
+                timeout: 750
+            });
+            //console.log("Could not load messages");
         });
     }
 
@@ -358,8 +441,11 @@ function AddMessage(userName, message) {
 
     message = CheckForSmiley(message);
 
-    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
-
+    if (userName == sessionStorage.getItem("username")) {
+        $('#divChatWindow').append('<div class="message"><span class="currentUserName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+    } else {
+        $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+    }
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
 }
@@ -382,8 +468,8 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName, chatId) {
     var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
     //var div = '<div id="' + data.Id + '" class="ui-widget-content draggable" rel="0">' +
                '<div class="header">' +
-                  '<div  style="float:right;">' +
-                      '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/>' +
+                  '<div  style="float:right;" class="chatPartnerName">' +
+                      '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/ height="18" width="18>' +
                    '</div>' +
 
                    '<span class="selText" rel="0">' + userName + '</span>' +

@@ -1,60 +1,110 @@
 ﻿body {
     padding: 0px;
     margin: 0px;
+    background-color: #cdc7ff;
+    background-image: url('../Images/22.png');
+    background-size: cover;
+    box-sizing: border-box;
 }
 
 #header {
-    padding: 20px;
-    background-color: #d7e5e4;
-    border-bottom: #5f9482 solid 2px;
-    color: #1e4638;
-    font-size: 24px;
+    /*background-color: #d8c7ff;*/
+    border-bottom: #333240 solid 4px;
+    color: #a6e7ff;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 40px;
 }
 
-.submitButton {
-    background-color: #d7e5e4;
-    border: #5f9482 solid 1px;
-    padding: 4px;
-    cursor: pointer;
-}
-
-    .submitButton:hover {
-        background-color: #e1e1e1;
+    #header h4 {
+        margin: 20px;
     }
+
+#divContainer {
+    width: 1200px;
+    margin: 20px auto;
+}
+
+    #divContainer p {
+        margin-top: 0px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #77046a;
+    }
+
 
 .login {
+    display: inline-block;
     width: 250px;
-    margin-left: auto;
-    margin-right: auto;
+    /*margin-left: auto;*/
+    /*margin-right: 20px;*/
     padding: 10px;
-    border: solid 2px #5f9482;
-    color: #1e4638;
+    margin-bottom: 10px;
+    border: solid 3px #333240;
+    border-radius: 15px;
+    color: #0b1c38;
+    background-color: #c6d7de;
+    height: 260px;
 }
 
-    .login .textBox {
-        width: 240px;
-    }
+#divLogin, #divRegister {
+    /*display: inline-block;*/
+    float: right;
+}
+
+#divLogin {
+    margin-right: 300px;
+    margin-left: 30px;
+}
+
+#btnLogin, #btnRegister {
+    width: 99%;
+    margin-right: 20px;
+}
+
+#txtPassword, #confirmRegisterPassword {
+    margin-bottom: 5px;
+}
+
+.loginText {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.login .textBox {
+    width: 240px;
+    padding: 2px 0px;
+    margin-bottom: 2px;
+}
 
 
-    .login #divButton {
-        padding: 4px;
-        text-align: right;
-    }
+.login #divButton {
+    padding: 4px;
+    text-align: right;
+}
+
+.chatHome, .chatRoom {
+    border: solid 3px #333240;
+    border-radius: 10px;
+    background-color: #c6d7de;
+}
 
 .chatHome {
     width: 320px;
     margin-left: auto;
     margin-right: auto;
-    border: solid 1px gray;
     float: left;
 }
 
-    .chatHome .title {
+    .chatHome .title, .chatRoom .title {
         font-size: 16px;
         font-weight: bold;
         padding: 8px;
         background-color: #d7e5e4;
-        border-bottom: solid 1px #5f9482;
+        border-bottom: solid 1px #333240;
+        border-radius: 10px 10px 0px 0px;
+        color: #333240;
     }
 
     .chatHome .content .chatWindow .activeChat:hover {
@@ -66,17 +116,8 @@
     width: 650px;
     margin-left: auto;
     margin-right: auto;
-    border: solid 1px gray;
     float: right;
 }
-
-    .chatRoom .title {
-        font-size: 16px;
-        font-weight: bold;
-        padding: 8px;
-        background-color: #d7e5e4;
-        border-bottom: solid 1px #5f9482;
-    }
 
     .chatRoom .content {
         height: 300px;
@@ -87,7 +128,7 @@
             float: left;
             width: 409px;
             height: 300px;
-            border-right: solid 1px #5f9482;
+            border-right: solid 1px #333240;
             overflow-y: scroll;
         }
 
@@ -97,6 +138,11 @@
 
                 .chatRoom .content .chatWindow .message .userName {
                     font-weight: bold;
+                }
+
+                .chatRoom .content .chatWindow .message .currentUserName {
+                    font-weight: bold;
+                    color: #0b8ba5;
                 }
 
         .chatRoom .content .users {
@@ -110,14 +156,14 @@
                 cursor: pointer;
                 padding: 4px;
                 background-color: #f9f9f9;
-                border-bottom: solid 1px #5f9482;
+                border-bottom: solid 1px #333240;
             }
 
             .chatRoom .content .users .currentUser {
                 display: block;
                 padding: 4px;
                 color: gray;
-                border-bottom: solid 1px #5f9482;
+                border-bottom: solid 1px #333240;
             }
 
             .chatRoom .content .users .user:hover {
@@ -125,7 +171,7 @@
             }
 
     .chatRoom .messageBar {
-        border-top: solid 1px gray;
+        border-top: solid 1px #333240;
         padding: 4px;
     }
 
@@ -144,14 +190,14 @@
 
 .draggable {
     position: absolute;
-    border: #5f9482 solid 1px !important;
+    border: #333240 solid 2px !important;
     width: 250px;
 }
 
     .draggable .header {
         cursor: move;
         background-color: #d7e5e4;
-        border-bottom: #5f9482 solid 1px;
+        border-bottom: #333240 solid 1px;
         color: #1e4638;
     }
 
@@ -164,11 +210,12 @@
         width: 250px;
         overflow-y: scroll;
         height: 200px;
-        border-bottom: #5f9482 solid 1px;
+        border-bottom: #333240 solid 1px;
+        border-top: #333240 solid 1px;
     }
 
         .draggable .messageArea .message {
-            padding: 4px;
+            /*padding: 4px;*/
         }
 
     .draggable .buttonBar {
@@ -177,10 +224,111 @@
     }
 
         .draggable .buttonBar .msgText {
-            width: 172px;
+            width: 162px;
         }
 
         .draggable .buttonBar .button {
             margin-left: 4px;
             width: 55px;
+            padding-bottom: 2px;
         }
+
+.submitButton {
+    -moz-box-shadow: 2px 3px 0px 0px #1d1d1f;
+    -webkit-box-shadow: 2px 3px 0px 0px #1d1d1f;
+    box-shadow: 2px 3px 0px 0px #1d1d1f;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0b1c38), color-stop(1, #445466));
+    background: -moz-linear-gradient(top, #0b1c38 5%, #445466 100%);
+    background: -webkit-linear-gradient(top, #0b1c38 5%, #445466 100%);
+    background: -o-linear-gradient(top, #0b1c38 5%, #445466 100%);
+    background: -ms-linear-gradient(top, #0b1c38 5%, #445466 100%);
+    background: linear-gradient(to bottom, #0b1c38 5%, #445466 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0b1c38', endColorstr='#445466',GradientType=0);
+    background-color: #0b1c38;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #4e6096;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #283966;
+    ;
+}
+
+    .submitButton:hover {
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #445466), color-stop(1, #0b1c38));
+        background: -moz-linear-gradient(top, #445466 5%, #0b1c38 100%);
+        background: -webkit-linear-gradient(top, #445466 5%, #0b1c38 100%);
+        background: -o-linear-gradient(top, #445466 5%, #0b1c38 100%);
+        background: -ms-linear-gradient(top, #445466 5%, #0b1c38 100%);
+        background: linear-gradient(to bottom, #445466 5%, #0b1c38 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#445466', endColorstr='#0b1c38',GradientType=0);
+        background-color: #445466;
+    }
+
+    .submitButton:active {
+        position: relative;
+        top: 2px;
+    }
+
+#divActiveChats {
+    margin-left: 10px;
+}
+
+#btnCreateChat, #btnLogout {
+    padding: 3px;
+    margin-top: 5px;
+}
+
+#chatPartner, #txtMessage, #txtPrivateMessage {
+    margin-top: 2px;
+    padding: 5px;
+}
+
+#btnSendMsg {
+    margin-bottom: 5px;
+}
+
+#spanUser {
+    color: #0b8ba5;
+}
+
+.ui-widget-content {
+    top: 280px;
+}
+
+
+
+#imgDelete {
+    float: right;
+    margin-left: 90px;
+    padding: 2px;
+}
+
+
+#divMessage .message .userName {
+    /*margin-left: 5px;*/
+    color: #0b8ba5;
+}
+
+.ui-widget-content span {
+    margin-left: 10px;
+}
+
+.chatPartnerName {
+    font-size: 20px;
+    padding-bottom: 2px;
+}
+
+
+/*#fromUser {
+    float: right;
+    clear: right;
+}*/
+
