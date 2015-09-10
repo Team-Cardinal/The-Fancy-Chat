@@ -387,6 +387,10 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\22.png" />
+    <Content Include="Images\back.png" />
+    <Content Include="Images\delete.png" />
+    <Content Include="Images\delete1.png" />
     <Content Include="index.html" />
     <Content Include="script.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -414,6 +418,7 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.noty.packaged.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -429,6 +434,17 @@
     <Content Include="Scripts\ui\jquery.ui.mouse.js" />
     <Content Include="Scripts\ui\jquery.ui.resizable.js" />
     <Content Include="Scripts\ui\jquery.ui.widget.js" />
+    <Content Include="Smilies\EmoticonAngry.gif" />
+    <Content Include="Smilies\EmoticonBigSmile.gif" />
+    <Content Include="Smilies\EmoticonCool.gif" />
+    <Content Include="Smilies\EmoticonCrying.gif" />
+    <Content Include="Smilies\EmoticonHappy.gif" />
+    <Content Include="Smilies\EmoticonHysterical.gif" />
+    <Content Include="Smilies\EmoticonSad.gif" />
+    <Content Include="Smilies\EmoticonShy.gif" />
+    <Content Include="Smilies\EmoticonSurprised.gif" />
+    <Content Include="Smilies\EmoticonTongue.gif" />
+    <Content Include="Smilies\EmoticonWink.gif" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -445,6 +461,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Smilies\sametime.asl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
