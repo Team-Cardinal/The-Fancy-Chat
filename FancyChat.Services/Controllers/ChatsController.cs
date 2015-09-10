@@ -15,6 +15,7 @@ namespace FancyChat.Services.Controllers
         private FancyChatContext db = FancyChatContext.Create();
 
         [HttpGet]
+        [Authorize]
         //GET /api/chats/{username}
         [Route("api/chats/{username}")]
         public IHttpActionResult GetAllChats(string username)
@@ -61,6 +62,7 @@ namespace FancyChat.Services.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         //GET /api/chats/{chatId}
         [Route("api/chats/{username}/{chatId}")]
         public IHttpActionResult GetPrivateChat(string username, int chatId)
@@ -81,6 +83,7 @@ namespace FancyChat.Services.Controllers
 
         //POST /api/chats
         [HttpPost]
+        [Authorize]
         [Route("api/chats")]
         public IHttpActionResult CreateChat(ChatBindingModel newChat)
         {
@@ -134,24 +137,6 @@ namespace FancyChat.Services.Controllers
             return this.Ok(chatToReturn);
         }
 
-        [HttpPost]
-        //POST /api/chats/{username}/{chatId}
-        [Route("api/chats/{username}/{chatId}")]
-        public IHttpActionResult PostPrivateChatMessage(PrivateMessageBindingModel model)
-        {
-            ApplicationUser sender = db.Users.FirstOrDefault(u => u.UserName == model.Sender);
-
-            var message = new PrivateMessage() { 
-                Text = model.Content,
-                DateTime = DateTime.Now,
-                ChatId = model.ChatId,
-                SenderId = sender.Id
-            };
-
-            db.PrivateMessages.Add(message);
-            db.SaveChanges();
-
-            return this.Ok();
-        }
+       
     }
 }

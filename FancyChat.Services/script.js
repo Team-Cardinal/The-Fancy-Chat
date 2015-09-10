@@ -46,11 +46,7 @@ var entityMap = {
 };
 
 function escapeHtml(string) {
-    //    return String(string).replace(/<(?!img|\/img).*?>/g, function (s) {
-   // return String(string).replace(/([&<>"'\/])(?!img)/g, function (s) {
     return String(string).replace(/([&<>"'\/])(?!img)(?!S)(?!Emo)(?! )(?!>)/g, function (s) {
-    
-   // return String(string).replace(/[&<>"'\/]/g, function (s) {
         return entityMap[s];
     });
 }
@@ -131,7 +127,7 @@ function registerEvents(chatHub) {
         if (password != confirmPassword) {
             console.log("Passwords do not match.");
         } else {
-            if (name.length > 0 && password.length > 0) {
+            if (name.length >= 5  && password.length > 0 && name.length <=10) {
                 registerRequest(email, name, password, confirmPassword);
             }
             else {
@@ -141,6 +137,9 @@ function registerEvents(chatHub) {
                 }
                 else if (password.length < 1) {
                     alert("Please enter password!");
+                }
+                else if (name.length > 10 || name.length < 5) {
+                    alert("Username should be between 5 and 10 characters long.");
                 }
             }
         }
@@ -185,7 +184,9 @@ function registerEvents(chatHub) {
 
             $.ajax({
                 url: "http://localhost:24252/api/chats",
-                method: "POST",
+                method: "POST", headers: {
+                    "Authorization": "bearer " + token
+                },
                 data: {                    
                     "CurrentUser": currentUser,
                     "ChatPartner": chatPartner
@@ -337,12 +338,12 @@ function AddUser(chatHub, id, name) {
 
     if (userId == id) {
 
-        html = $('<div class="currentUser">' + escapeHtml(name) + "1" + "</div>");
+        html = $('<div class="currentUser">' + escapeHtml(name) + "</div>");
 
     }
     else {
 
-        html = $('<div id="' + id + '" class="user" >' + escapeHtml(name) + "2" + '</div>');
+        html = $('<div id="' + id + '" class="user" >' + escapeHtml(name) + '</div>');
     }
 
     $("#divusers").append(html);

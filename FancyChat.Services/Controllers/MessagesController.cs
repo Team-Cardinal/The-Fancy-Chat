@@ -47,5 +47,27 @@ namespace FancyChat.Services.Controllers
             db.SaveChanges();
             return Ok(message);
         }
+
+        [HttpPost]
+        [Authorize]
+        //POST /api/chats/{username}/{chatId}
+        [Route("api/chats/{username}/{chatId}")]
+        public IHttpActionResult PostPrivateChatMessage(PrivateMessageBindingModel model)
+        {
+            ApplicationUser sender = db.Users.FirstOrDefault(u => u.UserName == model.Sender);
+
+            var message = new PrivateMessage()
+            {
+                Text = model.Content,
+                DateTime = DateTime.Now,
+                ChatId = model.ChatId,
+                SenderId = sender.Id
+            };
+
+            db.PrivateMessages.Add(message);
+            db.SaveChanges();
+
+            return this.Ok();
+        }
     }
 }
