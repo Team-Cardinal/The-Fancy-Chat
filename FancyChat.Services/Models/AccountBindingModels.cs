@@ -37,6 +37,7 @@ namespace FancyChat.Services.Models
         [Required]
         [MinLength(5)]
         [MaxLength(10)]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Use only letters and digits.")]
         public string UserName { get; set; }
 
         [Required]
