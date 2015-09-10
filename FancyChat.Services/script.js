@@ -3,6 +3,7 @@
 
     //azure: http://fancychat.cloudapp.net
     //localhost http://localhost:24252
+    
 
     setScreen(isLogged);
 
@@ -235,7 +236,6 @@ function registerEvents(chatHub) {
         var chatPartner = $("#chatPartner").val();
         var token = sessionStorage.getItem("authorizationToken");
 
-        //console.log(chatPartner);
         if (chatPartner) {
 
             var currentUser = sessionStorage.getItem("username");
@@ -252,13 +252,13 @@ function registerEvents(chatHub) {
                     "ChatPartner": chatPartner
                 }
             }).done(function (data) {
-                //alert("Chat has been successfully created.");
                 noty({
                     text: 'Chat has been successfully created.',
                     layout: 'center',
                     type: 'success',
                     timeout: 750
                 });
+                chatHub.server.createNewChat(data.Id, currentUser, chatPartner);
                 AppendNewActiveChat(data, chatHub);
 
             }).fail(function (data) {
@@ -416,6 +416,16 @@ function registerClientMethods(chatHub) {
 
     }
 
+    chatHub.client.appendNewActiveChatToClient = function (id, fromUserName)
+    {
+        $('#divHome').find('#divActiveChats').append('<div id="' + id + '"><span class="activeChat">' + fromUserName + '</span></div>');
+        $('.activeChat').click(function () {
+            var id = $(this).parent().attr('id');
+            if ($('#' + "private_" + id).length == 0) {
+                ShowActiveChat(id, chatHub);
+            }
+        });
+    }
 }
 
 function AddUser(chatHub, id, name) {
@@ -579,7 +589,7 @@ function GetPrivateChat(username, id) {
         method: "GET"
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
-            $('div #private_' + id).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + result[i].Name + ':' + escapeHtml(result[i].MessageContent) + '</span></div>');
+            $('div #private_' + id).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + result[i].Name + '</span>:' + escapeHtml(result[i].MessageContent) + '</div>');
         }
         var height = $('#' + "private_" + id).find("#divMessage")[0].scrollHeight;
         $('#' + "private_" + id).find("#divMessage").scrollTop(height);

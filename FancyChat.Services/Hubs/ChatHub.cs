@@ -59,6 +59,19 @@ namespace FancyChat.Services.Hubs
             Clients.All.messageReceived(userName, message);
         }
 
+        public void CreateNewChat(int chatId, string fromUser, string toUser)
+        {
+            var onlineUsers = db.OnlineUsers;
+            string fromUserId = Context.ConnectionId;
+            string toUserid = db.Users.FirstOrDefault(u => u.UserName == toUser).Id;
+            var toUserConnection = onlineUsers.OrderByDescending(u => u.Id).FirstOrDefault(u => u.UserId == toUserid);
+
+            if (toUserConnection != null)
+            {
+                Clients.Client(toUserConnection.ConnectionId).appendNewActiveChatToClient(chatId, fromUser);
+            }
+        }
+
         public void SendPrivateMessage(int chatId, string message)
         {
             var onlineUsers = db.OnlineUsers;
