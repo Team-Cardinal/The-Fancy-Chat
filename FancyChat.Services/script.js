@@ -71,17 +71,22 @@ function registerEvents(chatHub) {
             loginRequest(name, password);
 
         }).fail(function (data) {
-
             var responsetext = JSON.parse(data.responseText);
-
-            noty({
-                text: responsetext.ModelState["model.UserName"][0],
-                layout: 'center',
-                type: 'error',
-                timeout: 750
-            });
-            //console.log("Username or email already taken.");
-
+            if (responsetext.ModelState["model.UserName"] != undefined) {
+                noty({
+                    text: responsetext.ModelState["model.UserName"][0],
+                    layout: 'center',
+                    type: 'error',
+                    timeout: 750
+                });
+            } else {
+                noty({
+                    text: responsetext.ModelState[""][0],
+                    layout: 'center',
+                    type: 'error',
+                    timeout: 750
+                });
+            }          
         });
     }
     //click on login button
@@ -103,10 +108,7 @@ function registerEvents(chatHub) {
             console.log(data);
 
 
-        }).fail(function (data) {
-            console.log("Invalid username or password");
-            //$.noty.defaults.killer = true;
-
+        }).fail(function (data) {                  
             noty({
                 text: 'Invalid username or password!',
                 layout: 'center',
@@ -158,9 +160,9 @@ function registerEvents(chatHub) {
                 type: 'error',
                 timeout: 750
             });
-            //console.log("Passwords do not match.");
+           
         } else {
-            if (name.length >= 5  && password.length > 0 && name.length <=10) {
+            if (name.length >= 3  && password.length > 0 && name.length <=10) {
                 registerRequest(email, name, password, confirmPassword);
             }
             else {
@@ -173,10 +175,10 @@ function registerEvents(chatHub) {
                         timeout: 750
                     });
 
-                    //alert("Please enter name!");
+                    
                 }
                 else if (password.length < 1) {
-                    //alert("Please enter password!");
+                    
                     noty({
                         text: 'Please enter password!',
                         layout: 'center',
@@ -184,15 +186,18 @@ function registerEvents(chatHub) {
                         timeout: 750
                     });
                 }
-                else if (name.length > 10 || name.length < 5) {
-                    alert("Username should be between 5 and 10 characters long.");
+                else if (name.length > 10 || name.length < 3) {
+                    noty({
+                        text: 'Username should be between 3 and 10 characters.!',
+                        layout: 'center',
+                        type: 'error',
+                        timeout: 750
+                    });
                 }
             }
         }
 
     });
-
-
 
     $("#btnLogin").click(function () {
 
@@ -210,7 +215,7 @@ function registerEvents(chatHub) {
                     type: 'error',
                     timeout: 750
                 });
-                //alert("Please enter name!");
+              
             }
             else if (password.length < 1) {
                 noty({
@@ -219,7 +224,7 @@ function registerEvents(chatHub) {
                     type: 'error',
                     timeout: 750
                 });
-                //alert("Please enter password!");
+                
             }
         }
     });
@@ -337,7 +342,7 @@ function registerClientMethods(chatHub) {
                 type: 'error',
                 timeout: 750
             });
-            //console.log("Could not load messages");
+          
         });
     }
 
@@ -416,15 +421,14 @@ function registerClientMethods(chatHub) {
 
     }
 
-    chatHub.client.appendNewActiveChatToClient = function (id, fromUserName)
-    {
-        $('#divHome').find('#divActiveChats').append('<div id="' + id + '"><span class="activeChat">' + fromUserName + '</span></div>');
-        $('.activeChat').click(function () {
-            var id = $(this).parent().attr('id');
-            if ($('#' + "private_" + id).length == 0) {
-                ShowActiveChat(id, chatHub);
-            }
-        });
+    chatHub.client.appendNewActiveChatToClient = function (id, fromUserName) {
+        var data = {
+            Id: id,
+            ChatPartner: fromUserName
+        }
+
+        AppendNewActiveChat(data, chatHub);
+       
     }
 }
 
@@ -549,20 +553,13 @@ function GetActiveChats(username, chatHub) {
         }
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
-            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat">' + escapeHtml(result[i].ChatPartner) + '</span></div>');
+            AppendNewActiveChat(result[i], chatHub);
         }
-        $('.activeChat').click(function () {
-            var id = $(this).parent().attr('id');
-            if ($('#' + "private_" + id).length == 0) {
-                ShowActiveChat(id, chatHub);
-            }
-        });
-        console.log(result);
     });
 }
 
 function AppendNewActiveChat(data, chatHub) {
-    $('#divHome').find('#divActiveChats').append('<div id="' + data.Id + '"><span class="activeChat">' + data.ChatPartner + '</span></div>');
+    $('#divHome').find('#divActiveChats').append('<div id="' + data.Id + '"><span class="activeChat">' + escapeHtml(data.ChatPartner) + '</span></div>');
     $('.activeChat').click(function () {
         var id = $(this).parent().attr('id');
         if ($('#' + "private_" + id).length == 0) {
