@@ -153,7 +153,6 @@
 
             .chatRoom .content .users .user {
                 display: block;
-                cursor: pointer;
                 padding: 4px;
                 background-color: #f9f9f9;
                 border-bottom: solid 1px #333240;

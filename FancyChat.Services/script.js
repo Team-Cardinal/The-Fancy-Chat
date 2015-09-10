@@ -259,7 +259,7 @@ function registerClientMethods(chatHub) {
 
         $('#hdId').val(id);
         $('#hdUserName').val(userName);
-        $('#spanUser').html(userName);
+        $('#spanUser').html(escapeHtml(userName));
 
         // Add All Users
         for (i = 0; i < allUsers.length; i++) {
@@ -290,7 +290,7 @@ function registerClientMethods(chatHub) {
         $('#' + ctrId).remove();
 
 
-        var disc = $('<div class="disconnect">"' + userName + '" logged off.</div>');
+        var disc = $('<div class="disconnect">"' + escapeHtml(userName) + '" logged off.</div>');
 
         $(disc).hide();
         $('#divusers').prepend(disc);
@@ -337,21 +337,12 @@ function AddUser(chatHub, id, name) {
 
     if (userId == id) {
 
-        html = $('<div class="currentUser">' + name + "1" + "</div>");
+        html = $('<div class="currentUser">' + escapeHtml(name) + "1" + "</div>");
 
     }
     else {
 
-        html = $('<a id="' + id + '" class="user" >' + name + "2" + '<a>');
-
-        $(html).dblclick(function () {
-
-            var id = $(this).attr('id');
-
-            if (userId != id)
-                OpenPrivateChatWindow(chatHub, id, name);
-
-        });
+        html = $('<div id="' + id + '" class="user" >' + escapeHtml(name) + "2" + '</div>');
     }
 
     $("#divusers").append(html);
@@ -363,9 +354,9 @@ function AddMessage(userName, message) {
     message = CheckForSmiley(message);
 
     if (userName == sessionStorage.getItem("username")) {
-        $('#divChatWindow').append('<div class="message"><span class="currentUserName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+        $('#divChatWindow').append('<div class="message"><span class="currentUserName">' + escapeHtml(userName) + '</span>: ' + escapeHtml(message) + '</div>');
     } else {
-        $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+        $('#divChatWindow').append('<div class="message"><span class="userName">' + escapeHtml(userName) + '</span>: ' + escapeHtml(message) + '</div>');
     }
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
@@ -391,7 +382,7 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
                       '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/ height="18" width="18>' +
                    '</div>' +
 
-                   '<span class="selText" rel="0">' + userName + '</span>' +                  
+                   '<span class="selText" rel="0">' + escapeHtml(userName) + '</span>' +                  
                '</div>' +
                '<div id="divMessage" class="messageArea">' +
 
@@ -459,7 +450,7 @@ function GetActiveChats(username, chatHub) {
         }
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
-            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat">' + result[i].ChatPartner + '</span></div>');
+            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat">' + escapeHtml(result[i].ChatPartner) + '</span></div>');
         }
         $('.activeChat').click(function () {
             var id = $(this).parent().attr('id');
