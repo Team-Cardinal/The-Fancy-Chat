@@ -46,11 +46,9 @@ var entityMap = {
 };
 
 function escapeHtml(string) {
-    //    return String(string).replace(/<(?!img|\/img).*?>/g, function (s) {
-    // return String(string).replace(/([&<>"'\/])(?!img)/g, function (s) {
+
     return String(string).replace(/([&<>"'\/])(?!img)(?!S)(?!Emo)(?! )(?!>)/g, function (s) {
 
-        // return String(string).replace(/[&<>"'\/]/g, function (s) {
         return entityMap[s];
     });
 }
@@ -72,13 +70,17 @@ function registerEvents(chatHub) {
             loginRequest(name, password);
 
         }).fail(function (data) {
+
+            var responsetext = JSON.parse(data.responseText);
+
             noty({
-                text: 'Username or email already taken.',
+                text: responsetext.ModelState["model.UserName"][0],
                 layout: 'center',
                 type: 'error',
                 timeout: 750
             });
             //console.log("Username or email already taken.");
+
         });
     }
     //click on login button
@@ -157,7 +159,7 @@ function registerEvents(chatHub) {
             });
             //console.log("Passwords do not match.");
         } else {
-            if (name.length > 0 && password.length > 0) {
+            if (name.length >= 5  && password.length > 0 && name.length <=10) {
                 registerRequest(email, name, password, confirmPassword);
             }
             else {
@@ -180,6 +182,9 @@ function registerEvents(chatHub) {
                         type: 'error',
                         timeout: 750
                     });
+                }
+                else if (name.length > 10 || name.length < 5) {
+                    alert("Username should be between 5 and 10 characters long.");
                 }
             }
         }
@@ -236,9 +241,10 @@ function registerEvents(chatHub) {
 
             $.ajax({
                 url: "http://localhost:24252/api/chats",
-                method: "POST",
-                data: {
-                    //"Name": currentUser + " " + chatPartner,
+                method: "POST", headers: {
+                    "Authorization": "bearer " + token
+                },
+                data: {                    
                     "CurrentUser": currentUser,
                     "ChatPartner": chatPartner
                 }
@@ -339,7 +345,7 @@ function registerClientMethods(chatHub) {
 
         $('#hdId').val(id);
         $('#hdUserName').val(userName);
-        $('#spanUser').html(userName);
+        $('#spanUser').html(escapeHtml(userName));
 
         // Add All Users
         for (i = 0; i < allUsers.length; i++) {
@@ -370,7 +376,7 @@ function registerClientMethods(chatHub) {
         $('#' + ctrId).remove();
 
 
-        var disc = $('<div class="disconnect">"' + userName + '" logged off.</div>');
+        var disc = $('<div class="disconnect">"' + escapeHtml(userName) + '" logged off.</div>');
 
         $(disc).hide();
         $('#divusers').prepend(disc);
@@ -395,14 +401,15 @@ function registerClientMethods(chatHub) {
         if ($('#' + ctrId).length == 0) {
 
             createPrivateChatWindow(chatHub, windowId, ctrId, fromUserName);
-
+            GetPrivateChat(sessionStorage.getItem("username"), windowId);
+        }
+        else {
+            $('#' + ctrId).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + fromUserName + '</span>: ' + escapeHtml(message) + '</div>');
         }
 
-        $('#' + ctrId).find('#divMessage').append('<div class="message"><span class="userName">' + fromUserName + '</span>: ' + escapeHtml(message) + '</div>');
-
         // set scrollbar
-        var height = $('#' + ctrId).find('#divMessage')[0].scrollHeight;
-        $('#' + ctrId).find('#divMessage').scrollTop(height);
+        var height = $('#' + ctrId).find("#divMessage")[0].scrollHeight;
+        $('#' + ctrId).find("#divMessage").scrollTop(height);
 
     }
 
@@ -416,21 +423,12 @@ function AddUser(chatHub, id, name) {
 
     if (userId == id) {
 
-        html = $('<div class="currentUser">' + name + "1" + "</div>");
+        html = $('<div class="currentUser">' + escapeHtml(name) + "</div>");
 
     }
     else {
 
-        html = $('<a id="' + id + '" class="user" >' + name + "2" + '<a>');
-
-        $(html).dblclick(function () {
-
-            var id = $(this).attr('id');
-
-            if (userId != id)
-                OpenPrivateChatWindow(chatHub, id, name);
-
-        });
+        html = $('<div id="' + id + '" class="user" >' + escapeHtml(name) + '</div>');
     }
 
     $("#divusers").append(html);
@@ -442,9 +440,11 @@ function AddMessage(userName, message) {
     message = CheckForSmiley(message);
 
     if (userName == sessionStorage.getItem("username")) {
-        $('#divChatWindow').append('<div class="message"><span class="currentUserName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+
+        $('#divChatWindow').append('<div class="message"><span class="currentUserName">' + escapeHtml(userName) + '</span>: ' + escapeHtml(message) + '</div>');
     } else {
-        $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + escapeHtml(message) + '</div>');
+        $('#divChatWindow').append('<div class="message"><span class="userName">' + escapeHtml(userName) + '</span>: ' + escapeHtml(message) + '</div>');
+
     }
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
@@ -462,21 +462,16 @@ function OpenPrivateChatWindow(chatHub, id, userName) {
 
 }
 
-function createPrivateChatWindow(chatHub, userId, ctrId, userName, chatId) {
-    //function createPrivateChatWindow(chatHub, data) {
-
-    var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
-    //var div = '<div id="' + data.Id + '" class="ui-widget-content draggable" rel="0">' +
+function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
+    var chatId = userId;
+    var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +  
                '<div class="header">' +
                   '<div  style="float:right;" class="chatPartnerName">' +
                       '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/ height="18" width="18>' +
                    '</div>' +
-
-                   '<span class="selText" rel="0">' + userName + '</span>' +
-                   //'<span class="selText" rel="0">' + data.ChatPartner + '</span>' +
+                   '<span class="selText" rel="0">' + escapeHtml(userName) + '</span>' +                  
                '</div>' +
                '<div id="divMessage" class="messageArea">' +
-
                '</div>' +
                '<div class="buttonBar">' +
                   '<input id="txtPrivateMessage" class="msgText" type="text"   />' +
@@ -502,7 +497,6 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName, chatId) {
 
         if (msg.length > 0) {
 
-            chatHub.server.sendPrivateMessage(userId, msg);
             SendChatMessage(sessionStorage.getItem("username"), msg, chatId, chatHub);
             $textBox.val('');
         }
@@ -542,23 +536,25 @@ function GetActiveChats(username, chatHub) {
         }
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
-            //$('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat" onclick="GetPrivateChat(' + result[i].Id + ',' + sessionStorage.getItem("username") + ')">' + result[i].ChatPartner + '</span></div>');
-            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat">' + result[i].ChatPartner + '</span></div>');
+            $('#divHome').find('#divActiveChats').append('<div id="' + result[i].Id + '"><span class="activeChat">' + escapeHtml(result[i].ChatPartner) + '</span></div>');
         }
         $('.activeChat').click(function () {
             var id = $(this).parent().attr('id');
-            ShowActiveChat(id, chatHub);
+            if ($('#' + "private_" + id).length == 0) {
+                ShowActiveChat(id, chatHub);
+            }
         });
         console.log(result);
     });
 }
 
 function AppendNewActiveChat(data, chatHub) {
-    //$('#divHome').find('#divActiveChats').append('<div id="' + data.Id + '"><span class="activeChat" onclick="GetPrivateChat(' + data.Id + ',' + sessionStorage.getItem("username") + ')">' + data.ChatPartner + '</span></div>');
-    $('#divHome').find('#divActiveChats').append('<div id="' + data.Id + '"><span class="activeChat" onclick="ShowActiveChat(' + data.Id + ')">' + data.ChatPartner + '</span></div>');
+    $('#divHome').find('#divActiveChats').append('<div id="' + data.Id + '"><span class="activeChat">' + data.ChatPartner + '</span></div>');
     $('.activeChat').click(function () {
         var id = $(this).parent().attr('id');
-        ShowActiveChat(id, chatHub);
+        if ($('#' + "private_" + id).length == 0) {
+            ShowActiveChat(id, chatHub);
+        }
     });
 }
 
@@ -580,26 +576,29 @@ function GetPrivateChat(username, id) {
         method: "GET",
     }).done(function (result) {
         for (var i = 0; i < result.length; i++) {
-            $('div #private_' + id).find('#divMessage').append('<div><span>' + result[i].Name + ':' + escapeHtml(result[i].MessageContent) + '</span></div>');
+            $('div #private_' + id).find('#divMessage').append('<div class="privateMessage"><span class="userName">' + result[i].Name + ':' + escapeHtml(result[i].MessageContent) + '</span></div>');
         }
+        var height = $('#' + "private_" + id).find("#divMessage")[0].scrollHeight;
+        $('#' + "private_" + id).find("#divMessage").scrollTop(height);
     });
 }
 
 
-function SendChatMessage(username, message, id, chatHub) {
+function SendChatMessage(username, message, chatId, chatHub) {
     var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username + "/" + id,
+        url: "http://localhost:24252/api/chats/" + username + "/" + chatId,
         headers: {
             "Authorization": "bearer " + token
         },
         method: "POST",
         data: {
-            "ChatId": id,
+            "ChatId": chatId,
             "Content": message,
             "Sender": username,
         }
     }).done(function (data) {
+        chatHub.server.sendPrivateMessage(chatId, message);
         console.log("Private message sent.");
         console.log(data);
     });

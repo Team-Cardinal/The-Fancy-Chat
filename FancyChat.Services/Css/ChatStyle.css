@@ -78,7 +78,6 @@
     margin-bottom: 2px;
 }
 
-
 .login #divButton {
     padding: 4px;
     text-align: right;
@@ -153,7 +152,6 @@
 
             .chatRoom .content .users .user {
                 display: block;
-                cursor: pointer;
                 padding: 4px;
                 background-color: #f9f9f9;
                 border-bottom: solid 1px #333240;
@@ -279,6 +277,7 @@
 
 #divActiveChats {
     margin-left: 10px;
+    padding-bottom: 5px;
 }
 
 #btnCreateChat, #btnLogout {
@@ -303,14 +302,11 @@
     top: 280px;
 }
 
-
-
 #imgDelete {
     float: right;
     margin-left: 90px;
     padding: 2px;
 }
-
 
 #divMessage .message .userName {
     /*margin-left: 5px;*/
@@ -331,4 +327,3 @@
     float: right;
     clear: right;
 }*/
-

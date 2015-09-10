@@ -35,6 +35,9 @@ namespace FancyChat.Services.Models
     public class RegisterBindingModel
     {
         [Required]
+        [MinLength(5)]
+        [MaxLength(10)]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Use only letters and digits.")]
         public string UserName { get; set; }
 
         [Required]
@@ -53,23 +56,7 @@ namespace FancyChat.Services.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class RegisterExternalBindingModel
-    {
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
-
-    public class RemoveLoginBindingModel
-    {
-        [Required]
-        [Display(Name = "Login provider")]
-        public string LoginProvider { get; set; }
-
-        [Required]
-        [Display(Name = "Provider key")]
-        public string ProviderKey { get; set; }
-    }
+    
 
     public class SetPasswordBindingModel
     {
