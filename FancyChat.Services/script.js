@@ -58,7 +58,7 @@ function registerEvents(chatHub) {
 
     function registerRequest(email, name, password, confirmPassword) {
         $.ajax({
-            url: "http://localhost:24252/api/account/register",
+            url: "http://fancychat.cloudapp.net/api/account/register",
             method: "POST",
             data: {
                 "email": email,
@@ -66,8 +66,7 @@ function registerEvents(chatHub) {
                 "password": password,
                 "confirmPassword": confirmPassword
             }
-        }).done(function (data) {
-            console.log(data);
+        }).done(function (data) {          
             loginRequest(name, password);
 
         }).fail(function (data) {
@@ -92,7 +91,7 @@ function registerEvents(chatHub) {
     //click on login button
     function loginRequest(name, password) {
         $.ajax({
-            url: "http://localhost:24252/api/Account/Login",
+            url: "http://fancychat.cloudapp.net/api/Account/Login",
             method: "POST",
             data: ({
                 "userName": name,
@@ -105,9 +104,6 @@ function registerEvents(chatHub) {
             sessionStorage.setItem("authorizationToken", data.access_token);
             chatHub.server.connect(name);
             GetActiveChats(name, chatHub);
-            console.log(data);
-
-
         }).fail(function (data) {                  
             noty({
                 text: 'Invalid username or password!',
@@ -121,7 +117,7 @@ function registerEvents(chatHub) {
         var userName = sessionStorage.getItem("username");
         var token = sessionStorage.getItem("authorizationToken");
         $.ajax({
-            url: "http://localhost:24252/api/messages",
+            url: "http://fancychat.cloudapp.net/api/messages",
             method: "POST",
             headers: {
                 "Authorization": "bearer " + token
@@ -134,7 +130,6 @@ function registerEvents(chatHub) {
         }).done(function (data) {
             chatHub.server.sendMessageToAll(userName, msg);
             $("#txtMessage").val('');
-            console.log(data);
 
         }).fail(function (data) {
             noty({
@@ -143,7 +138,6 @@ function registerEvents(chatHub) {
                 type: 'error',
                 timeout: 750
             });
-            console.log("Cannot send message.");
         });
     }
 
@@ -229,11 +223,6 @@ function registerEvents(chatHub) {
         }
     });
 
-    $("#btnLogout").click(function () {
-        chatHub.server.disconnectUser(true);
-        setScreen(false);
-        console.log("Logout button clicked.");
-    });
 
     //click on Start New Chat button
     $("#btnCreateChat").click(function () {
@@ -244,10 +233,9 @@ function registerEvents(chatHub) {
         if (chatPartner) {
 
             var currentUser = sessionStorage.getItem("username");
-            console.log(currentUser);
 
             $.ajax({
-                url: "http://localhost:24252/api/chats",
+                url: "http://fancychat.cloudapp.net/api/chats",
                 method: "POST",
                 headers: {
                     "Authorization": "bearer " + token
@@ -266,8 +254,7 @@ function registerEvents(chatHub) {
                 chatHub.server.createNewChat(data.Id, currentUser, chatPartner);
                 AppendNewActiveChat(data, chatHub);
 
-            }).fail(function (data) {
-                console.log((data));
+            }).fail(function (data) {               
                 if (data.status == 404) {
                     noty({
                         text:'This user does not exist',
@@ -322,14 +309,13 @@ function registerClientMethods(chatHub) {
     function getMessagesRequest() {
         var token = sessionStorage.getItem("authorizationToken");
         $.ajax({
-            url: "http://localhost:24252/api/messages",
+            url: "http://fancychat.cloudapp.net/api/messages",
             method: "GET",
             headers: {
                 "Authorization": "bearer " + token
             }
 
-        }).done(function (data) {
-            console.log(data);
+        }).done(function (data) {           
             for (i = 0; i < data.length; i++) {
 
                 AddMessage(data[i].SenderUserName, data[i].Message);
@@ -508,10 +494,6 @@ function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
 
         $textBox = $div.find("#txtPrivateMessage");
         var msg = $textBox.val();
-
-        console.log(msg);
-
-
         if (msg.length > 0) {
 
             SendChatMessage(sessionStorage.getItem("username"), msg, chatId, chatHub);
@@ -546,7 +528,7 @@ function AddDivToContainer($div) {
 function GetActiveChats(username, chatHub) {
     var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username,
+        url: "http://fancychat.cloudapp.net/api/chats/" + username,
         metod: "GET",
         headers: {
             "Authorization": "bearer " + token
@@ -579,7 +561,7 @@ function ShowActiveChat(id, chatHub) {
 function GetPrivateChat(username, id) {
     var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username + "/" + id,
+        url: "http://fancychat.cloudapp.net/api/chats/" + username + "/" + id,
         headers: {
             "Authorization": "bearer " + token
         },
@@ -597,7 +579,7 @@ function GetPrivateChat(username, id) {
 function SendChatMessage(username, message, chatId, chatHub) {
     var token = sessionStorage.getItem("authorizationToken");
     $.ajax({
-        url: "http://localhost:24252/api/chats/" + username + "/" + chatId,
+        url: "http://fancychat.cloudapp.net/api/chats/" + username + "/" + chatId,
         headers: {
             "Authorization": "bearer " + token
         },
@@ -609,8 +591,7 @@ function SendChatMessage(username, message, chatId, chatHub) {
         }
     }).done(function (data) {
         chatHub.server.sendPrivateMessage(chatId, message);
-        console.log("Private message sent.");
-        console.log(data);
+       
     });
 }
 
